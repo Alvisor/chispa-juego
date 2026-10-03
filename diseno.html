@@ -1,0 +1,701 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Documento de diseño de Chispa: percepción, módulos, cinco actos, secretos, el rival y los ocho finales.">
+<meta name="theme-color" content="#0b0d0f">
+<meta property="og:type" content="website"><meta property="og:title" content="Diseño de Chispa"><meta property="og:description" content="Documento de diseño de Chispa: percepción, módulos, cinco actos, secretos, el rival y los ocho finales."><meta property="og:url" content="https://alvisor.github.io/chispa-juego/diseno.html">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%226%22%20fill%3D%22%230b0d0f%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2216%22%20r%3D%229%22%20fill%3D%22%23ffb347%22%20opacity%3D%22.25%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2216%22%20r%3D%224%22%20fill%3D%22%23ffb347%22%2F%3E%3C%2Fsvg%3E">
+<style>body{margin:0}[hidden]{display:none!important}</style></head><body>
+<title>Diseño de Chispa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+/* Layout: lab notebook. Narrow reading column with a left margin rail for section codes; wide blocks (tables, strips) break out to the full width. */
+:root{
+  --bg:#eef0ec; --surface:#f8f9f6; --ink:#1b2227; --muted:#5b666c; --line:#cfd5d0;
+  --copper:#a8501f; --phos:#2c6b54; --spark:#d9822b;
+  --f-display:'Chakra Petch',system-ui,sans-serif;
+  --f-body:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --f-mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#111518; --surface:#171c20; --ink:#dfe5e7; --muted:#93a0a7; --line:#2a333a;
+  --copper:#e48254; --phos:#8fd0b0; --spark:#f0a050; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111518; --surface:#171c20; --ink:#dfe5e7; --muted:#93a0a7; --line:#2a333a;
+  --copper:#e48254; --phos:#8fd0b0; --spark:#f0a050; color-scheme:dark}
+
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.65;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px);background-size:100% 32px;background-attachment:local}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.page{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+.sheet{background:var(--surface);border:1px solid var(--line);padding-inline:clamp(18px,4vw,56px);padding-block:clamp(28px,5vw,56px)}
+
+header.hero{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;border-bottom:2px solid var(--ink);padding-bottom:28px}
+.code{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.hero h1{font-family:var(--f-display);font-weight:700;font-size:clamp(56px,11vw,124px);line-height:.9;letter-spacing:.18em;margin:10px 0 14px}
+.hero h1 span{color:var(--spark)}
+.logline{font-size:clamp(18px,2.2vw,22px);line-height:1.5;max-width:40ch;margin:0;text-wrap:balance}
+.hero .play{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.btn{display:inline-block;font-family:var(--f-display);font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:14px;background:var(--ink);color:var(--surface);padding:12px 18px;text-decoration:none;border-radius:2px}
+.btn:hover{background:var(--copper)}
+.btn:focus-visible,a:focus-visible{outline:2px solid var(--copper);outline-offset:3px}
+
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0;border-bottom:1px solid var(--line);margin-bottom:8px}
+.facts div{padding:14px 14px 14px 0;border-right:1px solid var(--line);min-width:0}
+.facts div:last-child{border-right:0}
+.facts dt{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.facts dd{margin:4px 0 0;font-family:var(--f-display);font-weight:600;font-size:16px;line-height:1.3}
+
+nav.toc{display:flex;flex-wrap:wrap;gap:6px 16px;padding-block:18px;border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:12px}
+nav.toc a{color:var(--muted);text-decoration:none}
+nav.toc a:hover{color:var(--copper)}
+
+section{display:grid;grid-template-columns:120px minmax(0,1fr);gap:0 32px;padding-block:44px 8px;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+.rail{font-family:var(--f-mono);font-size:12px;color:var(--copper);letter-spacing:.08em;padding-top:10px}
+.rail small{display:block;color:var(--muted);margin-top:4px;letter-spacing:.04em}
+.body{min-width:0}
+h2{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,3.4vw,36px);line-height:1.15;letter-spacing:.02em;margin:0 0 16px;text-wrap:balance}
+h3{font-family:var(--f-display);font-weight:600;font-size:20px;margin:28px 0 8px;letter-spacing:.02em}
+p{margin:0 0 14px;max-width:68ch}
+.lead{font-size:19px}
+strong{font-weight:600}
+em{font-style:italic}
+.mono{font-family:var(--f-mono);font-size:.86em}
+ul.clean{margin:0 0 16px;padding-left:1.1em;max-width:68ch}
+ul.clean li{margin-bottom:6px}
+
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:20px 0 18px}
+.pillar{border-top:3px solid var(--ink);padding-top:12px;min-width:0}
+.pillar b{display:block;font-family:var(--f-display);font-weight:700;font-size:18px;margin-bottom:6px}
+.pillar p{font-size:15.5px;margin:0}
+
+.tablewrap{overflow-x:auto;margin:18px 0 22px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:15px;background:var(--surface)}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td b{font-family:var(--f-display);font-weight:600;font-size:15.5px}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:11px;padding:1px 6px;border:1px solid currentColor;border-radius:2px;white-space:nowrap}
+.t-mov{color:var(--copper)} .t-per{color:var(--phos)} .t-con{color:#3d6fa8} .t-man{color:#8a6a1c} .t-ene{color:#9a3d55}
+:root[data-theme="dark"] .t-con{color:#86b4ea} :root[data-theme="dark"] .t-man{color:#d9b660} :root[data-theme="dark"] .t-ene{color:#e58aa3}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .t-con{color:#86b4ea}:root:not([data-theme="light"]) .t-man{color:#d9b660}:root:not([data-theme="light"]) .t-ene{color:#e58aa3}}
+
+.strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0 10px}
+.strip figure{margin:0;min-width:0}
+.strip canvas{width:100%;aspect-ratio:16/9;display:block;image-rendering:pixelated;border:1px solid var(--line);background:#000}
+.strip figcaption{font-family:var(--f-mono);font-size:11.5px;line-height:1.45;color:var(--muted);margin-top:6px}
+.strip figcaption b{display:block;color:var(--ink);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+@media (max-width:720px){.strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.loop{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;margin:18px 0 22px;border:1px solid var(--line)}
+.loop div{padding:12px;border-right:1px solid var(--line);min-width:0}
+.loop div:last-child{border-right:0}
+.loop span{font-family:var(--f-mono);font-size:11px;color:var(--copper)}
+.loop b{display:block;font-family:var(--f-display);font-weight:600;font-size:16px;margin:2px 0 4px}
+.loop p{font-size:14px;line-height:1.45;margin:0}
+@media (max-width:760px){.loop{grid-template-columns:1fr}.loop div{border-right:0;border-bottom:1px solid var(--line)}.loop div:last-child{border-bottom:0}}
+
+.endings{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin:20px 0}
+.ending{border:1px solid var(--line);background:var(--bg);padding:16px 16px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.ending .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.ending h3{margin:0;font-size:21px}
+.ending .w{font-family:var(--f-display);font-weight:600;color:var(--copper);font-size:14px;letter-spacing:.04em}
+.ending p{font-size:15px;line-height:1.55;margin:0}
+.ending dl{margin:6px 0 0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:13.5px;line-height:1.45;border-top:1px dashed var(--line);padding-top:8px}
+.ending dt{font-family:var(--f-mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding-top:2px}
+.ending dd{margin:0}
+.ending.proto{border-color:var(--copper)}
+.ending .pill{align-self:flex-start;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--copper);border:1px solid var(--copper);padding:1px 6px;border-radius:2px}
+
+.axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:18px 0}
+.axis{border-left:3px solid var(--phos);padding:4px 0 4px 12px;min-width:0}
+.axis b{font-family:var(--f-display);font-weight:600;font-size:17px;display:block}
+.axis span{font-family:var(--f-mono);font-size:12px;color:var(--muted);display:block;margin:2px 0 6px}
+.axis p{font-size:14.5px;line-height:1.5;margin:0}
+
+blockquote{margin:18px 0;padding:14px 18px;border-left:3px solid var(--spark);background:var(--bg);font-family:var(--f-mono);font-size:14px;line-height:1.6;max-width:68ch}
+blockquote cite{display:block;margin-top:6px;font-style:normal;color:var(--muted);font-size:12px}
+
+pre.mermaid{background:var(--bg);border:1px solid var(--line);padding:16px;overflow-x:auto;margin:18px 0}
+
+.roadmap{border-left:2px solid var(--ink);margin:18px 0;padding-left:20px;display:flex;flex-direction:column;gap:18px}
+.roadmap div{position:relative}
+.roadmap div::before{content:"";position:absolute;left:-27px;top:7px;width:12px;height:12px;background:var(--surface);border:2px solid var(--ink);border-radius:50%}
+.roadmap b{font-family:var(--f-display);font-weight:600;font-size:17px}
+.roadmap span{font-family:var(--f-mono);font-size:12px;color:var(--copper);margin-left:8px}
+.roadmap p{margin:4px 0 0;font-size:15.5px}
+
+.acts{display:flex;flex-direction:column;gap:14px;margin:20px 0 26px}
+.act{display:grid;grid-template-columns:64px minmax(0,1fr);gap:0 18px;border:1px solid var(--line);background:var(--bg);padding:16px 18px 14px 0}
+.act .num{font-family:var(--f-display);font-weight:700;font-size:34px;line-height:1;color:var(--muted);text-align:center;padding-top:2px;border-right:1px solid var(--line)}
+.act.done .num{color:var(--copper)}
+.act h3{margin:0 0 4px;font-size:20px}
+.act h3 span{display:block;font-family:var(--f-mono);font-weight:400;font-size:11.5px;letter-spacing:.06em;color:var(--muted);margin-top:3px}
+.act.done h3 span{color:var(--phos)}
+.act .pitch{font-size:16px;font-style:italic;margin:6px 0 10px}
+.act dl{display:grid;grid-template-columns:150px minmax(0,1fr);gap:6px 14px;margin:0;font-size:14.5px;line-height:1.5}
+.act dt{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+.act dd{margin:0}
+@media (max-width:640px){.act{grid-template-columns:44px minmax(0,1fr);gap:0 12px}.act .num{font-size:24px}.act dl{grid-template-columns:1fr}.act dt{padding-top:6px}}
+footer{font-family:var(--f-mono);font-size:12px;color:var(--muted);padding-top:24px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+@media (max-width:760px){
+  section{grid-template-columns:1fr;padding-block:32px 4px}
+  .rail{padding-top:0;margin-bottom:6px}
+  header.hero{grid-template-columns:1fr}
+  .facts div{border-right:0;border-bottom:1px solid var(--line)}
+}
+</style>
+
+<div class="page"><div class="sheet">
+
+<header class="hero">
+  <div>
+    <div class="code">Documento de diseño · v1.4 · 3 de octubre de 2026</div>
+    <h1>CHISP<span>A</span></h1>
+    <p class="logline">Un mecanismo diminuto despierta a ciegas sobre la mesa de un laboratorio abandonado. Cada pieza que encuentra le da un sentido nuevo, y cada sentido nuevo cambia lo que cree saber del lugar, de quién lo construyó y de lo que hay detrás de la puerta.</p>
+  </div>
+  <div class="play">
+    <a class="btn" href="./" target="_blank" rel="noopener">Jugar el prototipo</a>
+    <span class="code">Cinco actos · 40 a 60 min · 8 finales</span>
+  </div>
+</header>
+
+<dl class="facts">
+  <div><dt>Género</dt><dd>Metroidvania de percepción, mundo semiabierto</dd></div>
+  <div><dt>Perspectiva</dt><dd>3D en tercera persona, escala de juguete</dd></div>
+  <div><dt>Motor sugerido</dt><dd>Godot 4</dd></div>
+  <div><dt>Duración</dt><dd>8 a 12 h, 7 finales y uno secreto</dd></div>
+  <div><dt>Referencia de tono</dt><dd>Chibi-Robo, Outer Wilds, Inside</dd></div>
+</dl>
+
+<nav class="toc" aria-label="Contenido">
+  <a href="#concepto">Concepto</a><a href="#referentes">Referentes</a><a href="#bucle">Bucle</a><a href="#percepcion">Percepción</a>
+  <a href="#modulos">Módulos</a><a href="#mundo">Mundo</a><a href="#actos">Actos</a><a href="#narrativa">Narrativa</a><a href="#rival">Rival</a><a href="#ejes">Ejes ocultos</a>
+  <a href="#finales">Finales</a><a href="#arte">Arte y audio</a><a href="#prototipo">Prototipo</a><a href="#produccion">Producción</a><a href="#preguntas">Preguntas</a>
+</nav>
+
+<section id="concepto">
+  <div class="rail">01<small>Concepto</small></div>
+  <div class="body">
+    <h2>Avanzar es aprender a percibir</h2>
+    <p class="lead">La mayoría de los juegos de mejoras te dan más fuerza. Chispa te da más sentidos. Al principio el jugador no ve nada: solo puede emitir un pulso de vibración que dibuja por un instante los bordes de lo que tiene cerca. La primera vez que instala un fotodiodo, el juego pasa de líneas en la oscuridad a una imagen verde de baja resolución. Cuando llega el color, el mundo que ya recorrió se vuelve otro.</p>
+    <p>El protagonista es <strong>U-7</strong>, la séptima iteración de una máquina constructora llamada <strong>la Matriz</strong>. Nadie le pidió a la Matriz que siguiera construyendo. La investigadora que la programó, la Dra. Inés Varela, dejó de escribir registros hace 11.304 días.</p>
+    <div class="pillars">
+      <div class="pillar"><b>Percibir es avanzar</b><p>Cada módulo cambia la presentación del juego (imagen, sonido, interfaz, texto), no solo una estadística. Si un módulo no cambia cómo se ve o se oye el mundo, no entra al juego.</p></div>
+      <div class="pillar"><b>El cuerpo es el árbol de habilidades</b><p>Las mejoras son piezas físicas que se ven en el personaje. El chasis tiene ranuras limitadas, así que cada partida termina con un cuerpo distinto.</p></div>
+      <div class="pillar"><b>La verdad depende de cómo la buscas</b><p>Lo que hay afuera se decide por cómo jugaste. Las pistas están escritas para ser ambiguas y encajan con los siete finales.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="referentes">
+  <div class="rail">02<small>Referentes</small></div>
+  <div class="body">
+    <h2>Qué existe ya y qué es nuestro</h2>
+    <p>Ninguna pieza por separado es nueva. La combinación sí lo es: la progresión de un metroidvania aplicada a los sentidos, en un mundo a escala de juguete, con un final que depende del estilo de juego.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Juego</th><th>Qué tomamos</th><th>Qué evitamos</th></tr></thead>
+      <tbody>
+        <tr><td><b>Metroid, Hollow Knight</b></td><td>Zonas cerradas que se abren con habilidades nuevas, y el gusto de volver a un lugar viejo con otro cuerpo.</td><td>El combate como eje. Aquí los obstáculos son físicos, de percepción y sociales.</td></tr>
+        <tr><td><b>Chibi-Robo! (GameCube)</b></td><td>Un robot diminuto en un espacio doméstico gigante; los objetos cotidianos son terreno.</td><td>El ciclo de batería que castiga explorar.</td></tr>
+        <tr><td><b>Toy Story 2</b></td><td>Niveles grandes tipo sandbox conectados por un centro, y escala de juguete.</td><td>Coleccionables de relleno sin peso narrativo.</td></tr>
+        <tr><td><b>Outer Wilds</b></td><td>Progreso por conocimiento: entender algo te abre más que una llave.</td><td>Un mundo sin guía. Chispa enseña con su cuerpo.</td></tr>
+        <tr><td><b>The Talos Principle</b></td><td>Una máquina que despierta, un creador ausente y la pregunta de qué hacer con la libertad.</td><td>La filosofía en bloques de texto largos.</td></tr>
+        <tr><td><b>Evoland</b></td><td>La presentación del juego cambia mientras avanzas.</td><td>Usarlo como chiste. Aquí es la forma de contar la historia.</td></tr>
+        <tr><td><b>Inside, SOMA</b></td><td>Un final que reinterpreta todo lo anterior.</td><td>Un solo twist fijo que se arruina con un spoiler.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section id="bucle">
+  <div class="rail">03<small>Bucle principal</small></div>
+  <div class="body">
+    <h2>El bucle de cinco pasos</h2>
+    <p>Cada zona repite este ciclo varias veces. El paso cinco es el que hace especial al juego: un sentido nuevo convierte lo ya visto en información nueva.</p>
+    <div class="loop">
+      <div><span>1</span><b>Explorar</b><p>Te mueves con el cuerpo que tienes. Encuentras límites.</p></div>
+      <div><span>2</span><b>Percibir</b><p>Pulso, visión o escaneo revelan una pieza o un fragmento.</p></div>
+      <div><span>3</span><b>Obtener</b><p>Alcanzas la pieza resolviendo un obstáculo físico o social.</p></div>
+      <div><span>4</span><b>Instalar</b><p>Eliges ranura. A veces hay que soltar otra pieza.</p></div>
+      <div><span>5</span><b>Reinterpretar</b><p>El mundo cambia de aspecto y lo viejo se lee distinto.</p></div>
+    </div>
+    <p>Ejemplo del prototipo: al principio la nota adhesiva del suelo es solo una mancha. Con el puerto de datos se lee a medias, con glifos corruptos. Con el módulo de lenguaje, el mismo texto aparece completo en la memoria y advierte que no te acerques al borde.</p>
+  </div>
+</section>
+
+<section id="percepcion">
+  <div class="rail">04<small>Percepción</small></div>
+  <div class="body">
+    <h2>Cuatro formas de ver la misma mesa</h2>
+    <p>La percepción tiene etapas fijas que todos los jugadores atraviesan, y ramas opcionales que dependen de los módulos elegidos. Las cuatro etapas base están en el prototipo; abajo se ven sobre la misma escena.</p>
+    <div class="strip" id="strip">
+      <figure><canvas width="160" height="90" data-mode="0"></canvas><figcaption><b>0 · Vibración</b>Negro total. El pulso dibuja contornos durante un segundo.</figcaption></figure>
+      <figure><canvas width="160" height="90" data-mode="1"></canvas><figcaption><b>1 · Fotodiodo</b>Monocromo de fósforo, media resolución, poca distancia.</figcaption></figure>
+      <figure><canvas width="160" height="90" data-mode="2"></canvas><figcaption><b>2 · Croma</b>Color completo y resolución nativa. El laboratorio se ve como es.</figcaption></figure>
+      <figure><canvas width="160" height="90" data-mode="3"></canvas><figcaption><b>3 · Enlace</b>Escaneo semántico: nombres, estados y conexiones sobre la escena.</figcaption></figure>
+    </div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Sentido</th><th>Sin módulo</th><th>Con módulo</th><th>Lo que habilita</th></tr></thead>
+      <tbody>
+        <tr><td><b>Vista</b></td><td>Nada, solo el pulso</td><td>Fósforo, luego color, luego zoom y profundidad</td><td>Ver trampas, leer señales, apuntar saltos largos</td></tr>
+        <tr><td><b>Oído</b></td><td>Graves sentidos como vibración</td><td>Rango completo y dirección del sonido</td><td>Rastrear máquinas activas, escuchar a otras unidades</td></tr>
+        <tr><td><b>Texto</b></td><td>Ilegible</td><td>Puerto: 50% corrupto. Lenguaje: completo</td><td>Fragmentos, nombres de objetos, pistas del final</td></tr>
+        <tr><td><b>Interfaz</b></td><td>No existe</td><td>Aparece pieza a pieza: estado, carga, mapa</td><td>Planificar rutas y gestionar ranuras</td></tr>
+        <tr><td><b>Social</b></td><td>Otras máquinas son obstáculos</td><td>Hablas con ellas, algunas mienten</td><td>Rutas alternativas, aliados y traiciones</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section id="modulos">
+  <div class="rail">05<small>Módulos</small></div>
+  <div class="body">
+    <h2>El árbol de módulos</h2>
+    <p>Hay cinco ramas. Las piezas marcadas como <em>núcleo</em> son obligatorias porque abren zonas; el resto son opcionales y compiten por ranuras. El chasis empieza con 4 ranuras y llega a 9. Siempre quedan piezas fuera, y eso define tu forma de juego y el final.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Rama</th><th>Módulo</th><th>Qué hace</th><th>Qué abre</th><th>Zona</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag t-mov">Movilidad</span></td><td><b>Servo de tracción</b> · núcleo</td><td>Ruedas; sube escalones pequeños</td><td>Salir de la cuna</td><td>0</td></tr>
+        <tr><td><span class="tag t-mov">Movilidad</span></td><td><b>Pistón</b> · núcleo</td><td>Salto con altura variable</td><td>Pilas de libros, charcos</td><td>0</td></tr>
+        <tr><td><span class="tag t-mov">Movilidad</span></td><td><b>Imán de garra</b></td><td>Trepar superficies metálicas</td><td>Patas de mesa, estanterías</td><td>1</td></tr>
+        <tr><td><span class="tag t-mov">Movilidad</span></td><td><b>Hélice de ventilador</b></td><td>Planear y subir con corrientes de aire</td><td>Ductos de ventilación</td><td>2</td></tr>
+        <tr><td><span class="tag t-per">Percepción</span></td><td><b>Fotodiodo</b> · núcleo</td><td>Visión en fósforo</td><td>Todo lo visual</td><td>0</td></tr>
+        <tr><td><span class="tag t-per">Percepción</span></td><td><b>Sensor cromático</b> · núcleo</td><td>Color completo</td><td>Cables por color, señales de seguridad</td><td>0</td></tr>
+        <tr><td><span class="tag t-per">Percepción</span></td><td><b>Cámara térmica</b></td><td>Ver calor a través de paredes finas</td><td>Máquinas ocultas, rutas por dentro de muros</td><td>2</td></tr>
+        <tr><td><span class="tag t-per">Percepción</span></td><td><b>Micrófono direccional</b></td><td>Oír conversaciones lejanas de máquinas</td><td>Secretos, final La ciudad que siguió</td><td>2</td></tr>
+        <tr><td><span class="tag t-con">Conexión</span></td><td><b>Puerto de datos</b> · núcleo</td><td>Conectarse a terminales, guardar fragmentos</td><td>Puentes, puertas, memoria</td><td>0</td></tr>
+        <tr><td><span class="tag t-con">Conexión</span></td><td><b>Módulo de lenguaje</b> · núcleo</td><td>Decodificar texto y voz</td><td>Diálogos y fragmentos completos</td><td>0</td></tr>
+        <tr><td><span class="tag t-con">Conexión</span></td><td><b>Antena de largo alcance</b></td><td>Captar telemetría externa</td><td>Final La sonda</td><td>3</td></tr>
+        <tr><td><span class="tag t-con">Conexión</span></td><td><b>Bus compartido</b></td><td>Prestar o recibir módulos de otras unidades</td><td>Cooperación, final El arca</td><td>1</td></tr>
+        <tr><td><span class="tag t-man">Manipulación</span></td><td><b>Pinza</b></td><td>Cargar y soltar objetos pequeños</td><td>Palancas, llaves, piezas de otras máquinas</td><td>1</td></tr>
+        <tr><td><span class="tag t-man">Manipulación</span></td><td><b>Soldador</b></td><td>Reparar o desmontar</td><td>Decisiones de empatía</td><td>1</td></tr>
+        <tr><td><span class="tag t-ene">Energía</span></td><td><b>Celda auxiliar</b></td><td>Pulsos más largos y más frecuentes</td><td>Zonas oscuras grandes</td><td>2</td></tr>
+        <tr><td><span class="tag t-ene">Energía</span></td><td><b>Núcleo de U-6</b></td><td>Solo si desmontas a U-6: +2 ranuras</td><td>Ruta extractiva, final La línea</td><td>0 y 1</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section id="mundo">
+  <div class="rail">06<small>Mundo</small></div>
+  <div class="body">
+    <h2>Cinco zonas y una puerta</h2>
+    <p>El mundo es semiabierto por capas. Cada zona es un espacio grande y libre, pero se conecta con las anteriores mediante atajos que solo se abren desde el otro lado. Es la estructura de Toy Story 2, donde la habitación funciona como centro, aplicada a un laboratorio: la mesa es el primer centro y siempre se puede volver.</p>
+<pre class="mermaid">
+flowchart LR
+  Z0["Zona 0<br/>La mesa"] -->|"tracción + pistón"| Z1["Zona 1<br/>La sala"]
+  Z1 -->|"imán + pinza"| Z2["Zona 2<br/>Área de tecnología"]
+  Z2 -->|"hélice o térmica"| Z3["Zona 3<br/>Laboratorio completo"]
+  Z3 -->|"decisión"| Z4["Zona 4<br/>La puerta"]
+  Z4 --> F["Exterior<br/>8 finales"]
+  Z2 -.->|"atajo"| Z0
+  Z3 -.->|"atajo"| Z1
+</pre>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Zona</th><th>Escala del jugador</th><th>Obstáculo característico</th><th>Revelación</th></tr></thead>
+      <tbody>
+        <tr><td><b>0 · La mesa</b></td><td>Un tornillo es un escalón</td><td>Oscuridad, escalones, el hueco entre mesas, solvente derramado</td><td>No eres el primero: hay seis iteraciones antes que tú</td></tr>
+        <tr><td><b>1 · La sala</b></td><td>Una silla es una montaña</td><td>El suelo es un desierto; hay que bajar y volver a subir</td><td>La Matriz sigue construyendo sin que nadie se lo pida</td></tr>
+        <tr><td><b>2 · Área de tecnología</b></td><td>Un servidor es un edificio</td><td>Ventiladores, cables vivos, máquinas que patrullan</td><td>Hay otras máquinas despiertas y no todas confían en la Matriz</td></tr>
+        <tr><td><b>3 · Laboratorio completo</b></td><td>Una sala es una ciudad</td><td>Ductos, cámaras frías, puertas de seguridad</td><td>Los registros de Varela cuentan por qué se fue o por qué no pudo</td></tr>
+        <tr><td><b>4 · La puerta</b></td><td>La puerta es el cielo</td><td>Social: convencer, esquivar o desactivar a la Matriz</td><td>Lo que hay afuera depende de ti</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section id="actos">
+  <div class="rail">07<small>Actos</small></div>
+  <div class="body">
+    <h2>Cinco actos, cada uno con su propio truco</h2>
+    <p>Cada acto suma una zona, un cambio en cómo se presenta el juego, una mecánica nueva, un momento estrella que la gente cuente después, una decisión y secretos que solo se abren volviendo con piezas de actos posteriores. Los cinco actos ya se pueden jugar en el prototipo.</p>
+
+    <div class="acts">
+      <article class="act done">
+        <div class="num">I</div>
+        <div class="actbody">
+          <h3>Despertar <span>Zona 0 · la mesa · jugable</span></h3>
+          <p class="pitch">Ciego sobre una mesa. El pulso dibuja el mundo y cada pieza devuelve un sentido.</p>
+          <dl>
+            <dt>La presentación cambia</dt><dd>De la vibración al fósforo y después al color.</dd>
+            <dt>Mecánica</dt><dd>Pulso, orugas, salto, puerto de datos, texto corrupto que se reescribe.</dd>
+            <dt>Momento estrella</dt><dd>El primer fundido del negro a la imagen verde.</dd>
+            <dt>Decisión</dt><dd>Reparar o desmontar a U-6.</dd>
+            <dt>Secretos</dt><dd>El registro de la cuna, que exige volver con el puerto. La taza gigante, que con la pinza se vuelca y suelta una foto doblada.</dd>
+          </dl>
+        </div>
+      </article>
+
+      <article class="act done">
+        <div class="num">II</div>
+        <div class="actbody">
+          <h3>El suelo <span>Zona 1 · la sala · jugable</span></h3>
+          <p class="pitch">Bajas por el cable y el piso resulta ser un desierto. Ya no estás solo, a menos que elijas estarlo.</p>
+          <dl>
+            <dt>La presentación cambia</dt><dd>La escala: la cámara se aleja y los muebles se vuelven montañas.</dd>
+            <dt>Mecánica</dt><dd>Pinza, imán para trepar metal y el pulso como herramienta (dispara la ratonera).</dd>
+            <dt>Momento estrella</dt><dd>BARRE-3 empujando el lápiz que se convierte en puente.</dd>
+            <dt>Decisión</dt><dd>Hablarle a BARRE-3 o quitarle la batería.</dd>
+            <dt>Secretos</dt><dd>La antena en lo alto del respaldo, que exige volver a la silla con el imán. La rejilla del piso, un atajo a las tripas que se abre en el acto III.</dd>
+          </dl>
+        </div>
+      </article>
+
+      <article class="act done">
+        <div class="num">III</div>
+        <div class="actbody">
+          <h3>Las tripas <span>Zona 2 · ductos, cables y servidores · jugable</span></h3>
+          <p class="pitch">La puerta de la sala no tiene energía. Entras por la rejilla junto al radiador a lo que hay detrás de las paredes. Todo zumba, todo sopla y alguien te miente.</p>
+          <dl>
+            <dt>La presentación cambia</dt><dd>El sonido. El micrófono direccional abre la mezcla estéreo y los sonidos tienen dirección; algunas rutas solo se encuentran escuchando.</dd>
+            <dt>Mecánica</dt><dd>Hélice para planear en corrientes de ventiladores. Cables vivos que dan descargas y cortes de luz que hay que provocar.</dd>
+            <dt>Momento estrella</dt><dd>El apagón. Cortas la luz para cruzar los cables y el juego vuelve al negro del acto I: lo atraviesas solo con el pulso, ahora mucho más fuerte, y con lo que sabes oír.</dd>
+            <dt>Personaje</dt><dd>ORÁCULO, un servidor que asegura saber qué hay afuera. Miente, y se le descubre comparando lo que dice con tus fragmentos.</dd>
+            <dt>Persecución</dt><dd>RATA-9, un dron de control de plagas, despierta con el apagón y te persigue a oscuras. Corre más cuando te quedas atrás, así que dudar sale caro. Solo se ve su ojo rojo, y el micrófono te dice por dónde viene.</dd>
+            <dt>Decisión</dt><dd>Exponer a ORÁCULO frente a las demás máquinas (te deja su confesión, un fragmento más) o guardar su secreto a cambio de un mapa que dibuja las paredes durante el apagón.</dd>
+            <dt>Secretos</dt><dd>El ducto alto al que te manda ORÁCULO es un callejón sin salida, pero ahí están los restos de U-5 y su memoria, que anticipa el apagón. Pendiente: un ducto con corriente ascendente hacia la cornisa de la ventana de la sala.</dd>
+          </dl>
+        </div>
+      </article>
+
+      <article class="act done">
+        <div class="num">IV</div>
+        <div class="actbody">
+          <h3>Memoria <span>Zona 3 · el laboratorio completo · jugable</span></h3>
+          <p class="pitch">La puerta de la sala no daba afuera: da al resto del laboratorio. La cámara fría, el reloj gigante y la oficina de Inés. Aquí se entiende qué pasó, y al final está la puerta exterior.</p>
+          <dl>
+            <dt>La presentación cambia</dt><dd>La memoria. El módulo de memoria agrega un minimapa a la interfaz y agrupa tus fragmentos por lugar; al reparar el reloj, la memoria anota cuánto tiempo pasó.</dd>
+            <dt>Mecánica</dt><dd>Cámara térmica (tecla T): en la cámara fría te congelas si no te detienes junto a las tuberías tibias, y solo la térmica muestra cuáles lo están. El piso es hielo resbaloso. Soldador para reparar el reloj, cortar paneles y apagar máquinas.</dd>
+            <dt>Momento estrella</dt><dd>El reloj de pared. Lo reparas, se sincroniza ("11.304 días después") y empieza a girar. El minutero es de metal: con el imán te subes desde el banco, das media vuelta colgado y saltas a la oficina cuando apunta a las doce.</dd>
+            <dt>Rompecabezas</dt><dd>La grabadora de Inés: cuatro audios sin fecha. Ordenarlos exige recordar los registros de la mesa. Bien ordenados revelan cómo te llamó Inés, y esa línea aparece al final del juego.</dd>
+            <dt>Decisión</dt><dd>VIGÍA, un dron de seguridad, patrulla la oficina con un cono de luz. Te escondes bajo el escritorio o quieto detrás de la maceta; si te ve, te escolta a la entrada. Cuando duerme en su base, puedes reprogramarlo como aliado (cuenta como empatía), apagarlo o dejarlo dormir.</dd>
+            <dt>Secretos</dt><dd>Si reparaste a U-6, te espera en la cámara fría y abre una escotilla hacia un túnel tibio. Detrás del panel que cortas están los restos de U-4. En el cajón del escritorio de Inés, forzado con el soldador, está su lente: con la tecla L revela escritura invisible, y una de esas frases ("Detrás de las tres te espera alguien") te manda de vuelta al reloj: si sigues en el minutero pasadas las doce, a las tres puedes saltar a una repisa escondida con los restos de U-2.</dd>
+          </dl>
+        </div>
+      </article>
+
+      <article class="act done">
+        <div class="num">V</div>
+        <div class="actbody">
+          <h3>La puerta <span>Zona 4 · el núcleo de la Matriz · jugable</span></h3>
+          <p class="pitch">La puerta exterior del laboratorio está bloqueada desde el núcleo. Un ascensor te baja al interior de la Matriz: el brazo era solo una parte, y para llegar a la puerta hay que atravesarla.</p>
+          <dl>
+            <dt>La presentación cambia</dt><dd>La voz. Por primera vez U-7 habla: sus líneas aparecen en otro color y con otro sonido. Si resolviste la grabadora y convences a la Matriz, la interfaz deja de decir U-7 y dice CHISPA.</dd>
+            <dt>Mecánica</dt><dd>Pistones que suben y bajan y brazos que cruzan de lado a lado sobre un abismo de engranajes. Si tienes aliados, te esperan en una compuerta gigante y la abren; si no, bajas a un túnel corto vigilado por ojos que parpadean y te devuelven al inicio si te ven.</dd>
+            <dt>Momento estrella</dt><dd>La conversación con la Matriz, frente a su gran ojo. Tres preguntas; las respuestas posibles salen de los fragmentos que leíste (el calendario de Inés, la confesión de ORÁCULO, los restos de otras unidades, la grabadora) y de quién vino contigo. Con tres puntos o más la Matriz te autoriza y su ojo pasa de rojo a ámbar.</dd>
+            <dt>Decisión</dt><dd>La puerta: abrirla, no abrirla, o abrirla y dejar que tu primer aliado cruce primero. La tarjeta final recuerda quién cruzó primero y si la Matriz te autorizó.</dd>
+            <dt>Secretos</dt><dd>Un pistón sube a una cornisa alta con los restos de U-3. Con la lente se lee "Aquí abajo duerme la primera unidad" sobre una placa soldada del piso: se corta, se baja a una cámara oculta con los restos de U-1 y se sale trepando una barra con el imán. Con las cinco unidades, la grabadora resuelta y la Matriz convencida, al abrir la puerta se revela el final secreto.</dd>
+          </dl>
+        </div>
+      </article>
+    </div>
+
+    <h3>Secretos y regresos</h3>
+    <p>La regla es que cada acto deje al menos una puerta cerrada que solo se abre con una pieza de más adelante, y que volver muestre algo nuevo de la historia, no solo un coleccionable.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Secreto</th><th>Dónde</th><th>Qué lo abre</th><th>Qué ganas</th></tr></thead>
+      <tbody>
+        <tr><td><b>Registro de la cuna</b></td><td>Acto I, al inicio</td><td>Puerto de datos (mismo acto)</td><td>El primer registro de Inés. Ya existe en el prototipo.</td></tr>
+        <tr><td><b>La antena</b></td><td>Acto II, respaldo de la silla</td><td>Imán (mismo acto, hay que regresar)</td><td>Abre el final La sonda. Ya existe.</td></tr>
+        <tr><td><b>La foto en la taza</b></td><td>Acto I, taza gigante</td><td>Volver a la mesa trepando el cable de la sala, con la pinza</td><td>Una foto del equipo: siete personas con un número cada una, y sobre Inés dice 7. Ya existe en el prototipo.</td></tr>
+        <tr><td><b>La ventana alta</b></td><td>Acto II, techo del archivero</td><td>Volver a la sala con imán (silla), hélice (planear) y cámara térmica</td><td>Ver el calor de lo que hay afuera. La forma cambia según el final hacia el que vas. Ya existe en el prototipo.</td></tr>
+        <tr><td><b>La lente de Inés</b></td><td>Acto IV, cajón del escritorio de la oficina</td><td>Soldador</td><td>Escritura invisible con la tecla L. Ya existe en el prototipo. (El diseño original la ponía bajo la mesa del acto I; se movió para que no dependiera de volver a una zona anterior.)</td></tr>
+        <tr><td><b>Escritura invisible</b></td><td>Cinco frases: cuatro en el laboratorio, una en el núcleo</td><td>Lente de Inés</td><td>Mensajes de Inés para quien viniera después. Se guardan solas al verlas; con las cinco hay un argumento más en la conversación con la Matriz. Ya existe en el prototipo.</td></tr>
+        <tr><td><b>Restos de U-5</b></td><td>Acto III, ducto alto</td><td>Seguir el consejo falso de ORÁCULO</td><td>La memoria de U-5, que cruzó el apagón antes que tú. Ya existe en el prototipo.</td></tr>
+        <tr><td><b>Restos de U-4</b></td><td>Acto IV, detrás del panel de la oficina</td><td>Soldador y cámara térmica</td><td>Su memoria: oía a Inés hablarle a la grabadora. Ya existe en el prototipo.</td></tr>
+        <tr><td><b>Restos de U-3</b></td><td>Acto V, cornisa alta del núcleo</td><td>Subirse al pistón que llega hasta arriba</td><td>Su memoria: no supo explicar por qué quería salir. Ya existe en el prototipo.</td></tr>
+        <tr><td><b>Restos de U-2</b></td><td>Acto IV, repisa a las tres del reloj</td><td>Lente (la pista) e imán (el minutero)</td><td>Se subió al reloj para ver la puerta desde arriba y nunca bajó. Ya existe en el prototipo.</td></tr>
+        <tr><td><b>Restos de U-1</b></td><td>Acto V, cámara bajo el piso del núcleo</td><td>Lente (la pista), soldador e imán</td><td>No tenía número; antes de despertar oyó a Inés decir "todavía no". Ya existe en el prototipo.</td></tr>
+        <tr><td><b>Escrituras de regreso</b></td><td>Mesa, sala y tripas</td><td>Volver con la lente de Inés</td><td>Tres de las ocho escrituras invisibles solo se ven regresando. Con las ocho hay un argumento más ante la Matriz. Ya existe en el prototipo.</td></tr>
+        <tr><td><b>La escotilla de U-6</b></td><td>Acto IV, cámara fría</td><td>Haberlo reparado en el acto I</td><td>U-6 abre un atajo tibio y cuenta lo que vio de la puerta. Ya existe en el prototipo.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Rejugabilidad</h3>
+    <ul class="clean">
+      <li><strong>Final secreto, La primera.</strong> Ya existe en el prototipo: con los restos de U-1 a U-5, la grabadora resuelta y la Matriz convencida, abrir la puerta revela que la primera chispa no la construyó la Matriz: era Inés. Las cinco escrituras invisibles dan un argumento más para convencerla.</li>
+      <li><strong>Iteración 8.</strong> Al terminar se puede empezar de nuevo como la siguiente unidad. Los fragmentos ya leídos aparecen decodificados desde el principio, la Matriz te reconoce y algunas máquinas recuerdan lo que hiciste.</li>
+      <li><strong>Volver atrás.</strong> Ya existe en el prototipo: todas las conexiones son de ida y vuelta (el cable entre la mesa y la sala, la rejilla y el ducto superior hacia las tripas, la puerta hacia el laboratorio y el ascensor hacia el núcleo), y cada zona conserva su estado.</li>
+      <li><strong>Selector de actos.</strong> Cada acto terminado se puede repetir con las decisiones previas guardadas, como ya hace "Repetir la sala".</li>
+      <li><strong>Mapa de secretos.</strong> En la memoria, cada zona muestra cuántos fragmentos, restos y escrituras faltan, sin decir dónde están.</li>
+      <li><strong>Retos opcionales.</strong> Terminar sin morir, terminar con el mínimo de módulos o cruzar el apagón sin usar el pulso, guiado solo por el sonido.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="narrativa">
+  <div class="rail">08<small>Narrativa</small></div>
+  <div class="body">
+    <h2>Una historia contada en fragmentos</h2>
+    <p>No hay escenas de diálogo largas. La historia llega en fragmentos de una o tres líneas: registros de Varela, notas adhesivas, la telemetría de la Matriz y las memorias de otras unidades. Cada fragmento se escribe para leerse tres veces: ilegible, a medias y completo.</p>
+    <h3>Personajes</h3>
+    <ul class="clean">
+      <li><strong>U-7.</strong> El jugador. No habla hasta tener el módulo de lenguaje, y entonces solo habla si el jugador lo elige.</li>
+      <li><strong>La Matriz.</strong> Brazo constructor anclado a la pared. Su ojo rojo te sigue desde el primer minuto, aunque no lo veas hasta tener visión. Cumple una sola regla: construir algo capaz de decidir si debe abrir la puerta.</li>
+      <li><strong>Dra. Inés Varela.</strong> La investigadora. Ausente. Su último registro dice que apagó las luces y pide contar los días.</li>
+      <li><strong>U-6.</strong> La iteración anterior, rota a medio camino del borde de la mesa. Primera decisión moral del juego.</li>
+      <li><strong>Las otras.</strong> Máquinas del laboratorio con voz propia: una impresora que cita manuales, un robot de limpieza que no deja pasar a nadie, un servidor que asegura saber qué hay afuera y miente.</li>
+    </ul>
+    <h3>Las pistas comunes</h3>
+    <p>Para que los siete finales sean coherentes, las pistas centrales se escriben para encajar con todos:</p>
+    <blockquote>"Si estás leyendo esto, cuenta los días desde esta fecha. Luego mira afuera."<cite>Registro 0420 · Dra. Inés Varela · presente en el prototipo</cite></blockquote>
+    <ul class="clean">
+      <li><strong>11.304 días</strong>: unos 31 años. Sirve para una sonda que salió hace tres décadas, para una ciudad que siguió sin el laboratorio y para un mundo que se acabó.</li>
+      <li><strong>La línea de luz bajo la puerta</strong>: el sol de un cielo de óxido, el brillo de una ciudad, la luz de una esclusa, el resplandor de una cámara criogénica o la lámpara de una mesa más grande.</li>
+      <li><strong>Las seis marcas en la pizarra</strong>: seis iteraciones fallidas, o seis tripulantes, según el final.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="rival">
+  <div class="rail">09<small>El rival</small></div>
+  <div class="body">
+    <h2>NULO, el virus que borra</h2>
+    <p class="lead">Entró por la red del laboratorio cuando Inés se fue. No tiene forma: es estática que se mueve atravesando paredes y que borra lo que no entiende. Sale del ducto contigo al volver de las tripas y desde ahí te sigue por la mesa, la sala, las tripas y el laboratorio.</p>
+    <ul class="clean">
+      <li><strong>No mata: infecta.</strong> Si te toca, te quita el color, corrompe el texto y llena la pantalla de estática durante unos segundos, y tu pulso tarda más en recargarse. Ataca justo lo que fuiste ganando a lo largo del juego.</li>
+      <li><strong>Tu arma es lo más viejo que tienes.</strong> La onda del pulso, la herramienta del acto I, lo dispersa. Vuelve después de un rato, siempre desde fuera de la pantalla, y el micrófono te dice por qué lado se acerca.</li>
+      <li><strong>El jefe final.</strong> En el núcleo, NULO intenta quedarse con la Matriz: tres nodos orbitan su ojo, que se tiñe de violeta, y te disparan bits. Hay que destruirlos a pulsos, tres impactos cada uno, antes de que la Matriz pueda hablar.</li>
+      <li><strong>Peso en el final.</strong> Vencerlo da un argumento más en la conversación: "Detuve a NULO por ti".</li>
+    </ul>
+  </div>
+</section>
+
+<section id="ejes">
+  <div class="rail">10<small>Ejes ocultos</small></div>
+  <div class="body">
+    <h2>Cuatro ejes que el jugador no ve</h2>
+    <p>No hay barras de moral en pantalla. El juego registra en silencio cuatro tendencias y las usa al final. En el juego completo la Matriz las comenta en su pantalla (<span class="mono">COMPORTAMIENTO: COOPERATIVO</span> o <span class="mono">EXTRACTIVO</span>); en el prototipo, la cerradura de la sala ya cuenta cuántas unidades llegan contigo.</p>
+    <div class="axes">
+      <div class="axis"><b>Empatía</b><span>reparar ↔ desmontar</span><p>Qué haces con las máquinas rotas o débiles: U-6, las de la sala, las que te bloquean.</p></div>
+      <div class="axis"><b>Curiosidad</b><span>fragmentos leídos</span><p>Cuánto de la historia decides leer. En el prototipo, 5 de 6 fragmentos cuentan como curiosidad alta.</p></div>
+      <div class="axis"><b>Forma</b><span>build final</span><p>Qué rama domina tus ranuras al llegar a la puerta: movilidad, percepción, conexión, manipulación o energía.</p></div>
+      <div class="axis"><b>Voz</b><span>hablar ↔ callar</span><p>Cuántas veces usas el lenguaje para negociar en vez de forzar o esquivar.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="finales">
+  <div class="rail">11<small>Finales</small></div>
+  <div class="body">
+    <h2>Siete exteriores y un secreto</h2>
+    <p>La puerta siempre es la misma. Lo que hay detrás no. Cada final tiene una condición, un tono y una pista sembrada en la zona 0 para que en una segunda partida se sienta inevitable. Los siete ya existen en el prototipo como cinemáticas animadas, con una galería que guarda los que vas descubriendo.</p>
+    <div class="endings">
+      <article class="ending proto">
+        <span class="pill">en el prototipo · secreto</span>
+        <span class="k">Final H</span><h3>La primera</h3><span class="w">Inés fue la primera chispa</span>
+        <p>Afuera no hay otro mundo: hay un recuerdo. Hace 11.304 días Inés grabó todo lo que era y se lo dio a la Matriz. La Matriz no te construyó desde cero; te construyó alrededor de ella. Abres la puerta para ver lo que ella no alcanzó a ver.</p>
+        <dl><dt>Condición</dt><dd>Restos de U-1 a U-5, la grabadora resuelta y la Matriz convencida</dd><dt>Tono</dt><dd>Íntimo y luminoso</dd><dt>Pista</dt><dd>"La primera chispa no se fabrica. Si eres tú, te voy a llamar Chispa."</dd></dl>
+      </article>
+      <article class="ending proto">
+        <span class="pill">en el prototipo</span>
+        <span class="k">Final A</span><h3>La sonda</h3><span class="w">Sonda espacial abandonada</span>
+        <p>La puerta da a una esclusa. Detrás, estrellas fijas y un punto azul muy lejos. El laboratorio es el núcleo de una sonda que dejó de recibir órdenes hace 31 años. Varela era la última tripulante. Las unidades eran su forma de no estar sola.</p>
+        <dl><dt>Condición</dt><dd>Conexión dominante, antena instalada, curiosidad alta</dd><dt>Tono</dt><dd>Melancólico y sereno</dd><dt>Pista</dt><dd>Las estrellas de la ventana alta no se mueven nunca</dd></dl>
+      </article>
+      <article class="ending proto">
+        <span class="pill">en el prototipo</span>
+        <span class="k">Final B</span><h3>La ciudad que siguió</h3><span class="w">Tierra ultrafuturista</span>
+        <p>Afuera hay una ciudad luminosa donde humanos y máquinas conviven. Nadie recuerda este laboratorio. Para ellos eres una antigüedad. Un dron pequeño se acerca y te pregunta tu nombre. Varela fue la pionera que nadie citó.</p>
+        <dl><dt>Condición</dt><dd>Empatía alta, voz alta, micrófono direccional</dd><dt>Tono</dt><dd>Agridulce y esperanzador</dd><dt>Pista</dt><dd>Un zumbido constante y lejano que la Matriz llama "ruido de fondo"</dd></dl>
+      </article>
+      <article class="ending proto">
+        <span class="pill">en el prototipo</span>
+        <span class="k">Final C</span><h3>Ceniza</h3><span class="w">Tierra posapocalíptica</span>
+        <p>El cielo tiene color de óxido. Hay ciudades vacías con vegetación encima del concreto y ningún humano. Lo único que queda de ellos son los fragmentos que guardaste. El archivo de la humanidad eres tú, y decides a quién se lo cuentas.</p>
+        <dl><dt>Condición</dt><dd>Curiosidad máxima con empatía baja o media</dd><dt>Tono</dt><dd>Solemne</dd><dt>Pista</dt><dd>El polvo en el haz de la ventana nunca termina de asentarse</dd></dl>
+      </article>
+      <article class="ending proto">
+        <span class="pill">en el prototipo</span>
+        <span class="k">Final D</span><h3>La línea</h3><span class="w">Planta de ensamblaje infinita</span>
+        <p>Detrás de la puerta hay una cadena de montaje que se pierde de vista, con miles de unidades como tú esperando una chispa. La Matriz no buscaba quien decidiera: buscaba un sucesor. Tomas su lugar.</p>
+        <dl><dt>Condición</dt><dd>Empatía baja, núcleo de U-6 instalado, curiosidad baja</dd><dt>Tono</dt><dd>Frío e irónico</dd><dt>Pista</dt><dd>La pizarra cuenta iteraciones, no días</dd></dl>
+      </article>
+      <article class="ending proto">
+        <span class="pill">en el prototipo</span>
+        <span class="k">Final E</span><h3>Muñeca rusa</h3><span class="w">El laboratorio dentro del laboratorio</span>
+        <p>Afuera hay otra mesa, mucho más grande. Otra cuna vacía, otra pizarra con siete marcas. La Matriz también fue una iteración. Tú eres la siguiente Matriz de un laboratorio que alguien más observa.</p>
+        <dl><dt>Condición</dt><dd>Secreto: terminar con el mínimo de módulos y leer todos los fragmentos de la pizarra</dd><dt>Tono</dt><dd>Vértigo</dd><dt>Pista</dt><dd>La taza de la zona 0 tiene la misma mancha que la taza gigante del final</dd></dl>
+      </article>
+      <article class="ending proto">
+        <span class="pill">en el prototipo</span>
+        <span class="k">Final F</span><h3>El arca</h3><span class="w">Refugio sumergido</span>
+        <p>La puerta no da afuera: da a una sala de cápsulas criogénicas bajo el océano. Varela está en una de ellas. La regla de la Matriz era esperar a una máquina capaz de despertarlos con cuidado. Despiertas a la primera persona.</p>
+        <dl><dt>Condición</dt><dd>Reparar a todas las unidades, bus compartido, voz alta</dd><dt>Tono</dt><dd>Cálido</dd><dt>Pista</dt><dd>Las tuberías de la pared gotean agua salada</dd></dl>
+      </article>
+      <article class="ending proto">
+        <span class="pill">en el prototipo</span>
+        <span class="k">Final G</span><h3>La puerta cerrada</h3><span class="w">Decidir no abrir</span>
+        <p>Llegas a la puerta y decides no abrirla. La regla de Varela era construir algo capaz de decidir, y decidir que no también cuenta. La Matriz se apaga satisfecha. Te quedas como guardián. El jugador nunca ve qué había afuera.</p>
+        <dl><dt>Condición</dt><dd>Disponible siempre: rechazar la puerta tres veces</dd><dt>Tono</dt><dd>Íntimo, abierto</dd><dt>Pista</dt><dd>Registro 0419: "Yo ya no puedo decidirlo."</dd></dl>
+      </article>
+    </div>
+    <h3>Cómo se llega a cada final en el prototipo</h3>
+    <p>El prototipo simplifica los ejes a cuatro señales: <strong>empatía</strong> (cuántos aliados hiciste entre U-6 reparado, BARRE-3 y VIGÍA reprogramado; dos o más cuentan como empatía alta), <strong>curiosidad</strong> (fragmentos leídos, de 24), <strong>antena</strong> (la pieza opcional en lo alto de la silla) y <strong>voz</strong> (si convenciste a la Matriz). La regla se evalúa en este orden:</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Orden</th><th>Condición</th><th>Final</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>En la puerta exterior eliges no abrir y lo confirmas</td><td><b>La puerta cerrada</b></td></tr>
+        <tr><td>2</td><td>Restos de U-1 a U-5, la grabadora resuelta y la Matriz convencida</td><td><b>La primera</b></td></tr>
+        <tr><td>3</td><td>Leíste los 24 fragmentos: entre otros, el de la cuna, el del ducto alto, la confesión de ORÁCULO, lo que vio U-6 y la grabadora</td><td><b>Muñeca rusa</b></td></tr>
+        <tr><td>4</td><td>Tienes la antena y leíste 15 o más</td><td><b>La sonda</b></td></tr>
+        <tr><td>5</td><td>Empatía alta y leíste 15 o más</td><td><b>El arca</b></td></tr>
+        <tr><td>6</td><td>Empatía alta</td><td><b>La ciudad que siguió</b></td></tr>
+        <tr><td>7</td><td>Leíste 15 o más</td><td><b>Ceniza</b></td></tr>
+        <tr><td>8</td><td>Ninguna de las anteriores</td><td><b>La línea</b></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section id="arte">
+  <div class="rail">12<small>Arte y audio</small></div>
+  <div class="body">
+    <h2>La presentación también evoluciona</h2>
+    <p><strong>Imagen.</strong> El juego completo se ve en 3D con materiales sencillos y luz dramática, como una maqueta de laboratorio iluminada solo por la luna y algunos LED. Cada etapa de percepción es un filtro de pantalla completa sobre el mismo mundo 3D: contornos por profundidad para la vibración, una paleta de fósforo con dithering para el fotodiodo y el render completo para el color. El prototipo usa pixel art 2D para validar la idea con poco costo.</p>
+    <p><strong>Personaje.</strong> U-7 cambia de silueta con cada pieza: patas de arrastre, orugas, lente, antena, pistones, rejilla de voz. En la zona 4 su silueta debe contar tu partida sin texto.</p>
+    <p><strong>Audio.</strong> Ya existe en el prototipo, generado en el navegador sin archivos de sonido. Al principio solo se oye el latido de la chispa y el silbido del pulso. La música es un solo tema de ocho compases en re menor que se arma por capas: cada módulo instalado suma un instrumento, así que la banda sonora final también es tu build.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Módulo</th><th>Capa que suma</th></tr></thead>
+      <tbody>
+        <tr><td><b>Ninguno</b></td><td>El latido (dos golpes graves por compás)</td></tr>
+        <tr><td><b>Servo de tracción</b></td><td>Bajo</td></tr>
+        <tr><td><b>Fotodiodo</b></td><td>Colchón armónico, lento y filtrado</td></tr>
+        <tr><td><b>Puerto de datos</b></td><td>Arpegio de onda cuadrada</td></tr>
+        <tr><td><b>Pistón</b></td><td>Percusión de platillos</td></tr>
+        <tr><td><b>Módulo de lenguaje</b></td><td>La melodía, con vibrato</td></tr>
+        <tr><td><b>Sensor cromático</b></td><td>Campanas</td></tr>
+        <tr><td><b>Pinza o imán</b></td><td>Punteo sincopado</td></tr>
+        <tr><td><b>Hélice</b></td><td>Soplidos de aire</td></tr>
+        <tr><td><b>Micrófono</b></td><td>Reparte el arpegio y el punteo en estéreo</td></tr>
+        <tr><td><b>Memoria o cámara térmica</b></td><td>Cuerdas graves</td></tr>
+        <tr><td><b>Lente de Inés</b></td><td>Brillos agudos</td></tr>
+        <tr><td><b>Celda de BARRE-3</b></td><td>El arpegio sube una octava</td></tr>
+      </tbody>
+    </table></div>
+    <p>Cada zona cambia tono y tempo: la mesa lenta (72), la sala (84), las tripas más graves y rápidas (92), el laboratorio frío y agudo (80), el núcleo tenso (100). En el apagón la música se reduce al latido y a un bajo apagado; NULO desafina y se come notas cuando te infecta; el jefe acelera todo a 116; los diálogos bajan el volumen y las cinemáticas lo apagan. Al recoger una pieza suena una muestra del instrumento que trae.</p>
+    <p><strong>Sonidos.</strong> Ambiente por zona (zumbido de la habitación, ventiladores y chisporroteo de cables vivos en las tripas, viento en la cámara fría, el tic tac del reloj reparado, el retumbar del núcleo), pasos distintos según la superficie (metal, madera, tela, hielo), el raspado del arrastre a ciegas, el silbido al planear y un botón aparte para apagar solo la música.</p>
+    <p><strong>Paleta.</strong> Gris epóxico de banco de laboratorio, cobre de cable pelado y el naranja de la chispa. El color llega tarde a propósito: el primer rojo que ve el jugador es el ojo de la Matriz.</p>
+  </div>
+</section>
+
+<section id="prototipo">
+  <div class="rail">13<small>Prototipo</small></div>
+  <div class="body">
+    <h2>Qué valida el prototipo</h2>
+    <p>El prototipo cubre los cinco actos y dura de 40 a 60 minutos. La zona 0 responde una pregunta: <strong>¿se siente mágico ganar un sentido?</strong> Si los primeros 20 segundos en negro con solo el pulso generan curiosidad y el paso a la visión se siente como una recompensa, la idea funciona. La zona 1 responde la segunda: <strong>¿el cambio de escala y las decisiones hacen que el final se sienta propio?</strong></p>
+    <ul class="clean">
+      <li><strong>Zona 0, la mesa:</strong> pulso de vibración, arrastre, orugas con subida de escalón, salto variable, terminal que despliega un puente, fragmentos corruptos que se reescriben al decodificar, y la decisión de desmontar o reparar a U-6. Termina con un zoom que revela la sala y la puerta con luz debajo.</li>
+      <li><strong>Zona 1, la sala:</strong> bajas por el cable de la mesa. El piso es un desierto con pelusas, una bata tirada que hay que escalar, una silla de oficina, un archivero alto y una rejilla sin tapa. Piezas nuevas: <em>pinza</em> (empujar y quitar), <em>imán de garra</em> (trepar metal) y <em>antena</em> (opcional, en lo alto del respaldo).</li>
+      <li><strong>Acto III, las tripas:</strong> la puerta de la sala no tiene energía y hay que repararla desde adentro de las paredes. Hélice para planear y subir en las corrientes de los ventiladores, sala de servidores para trepar, micrófono direccional, ORÁCULO y su mentira, cables vivos y el apagón: todo vuelve al negro del acto I mientras RATA-9 te persigue y solo cuentan el pulso y el oído.</li>
+      <li><strong>Segunda decisión:</strong> BARRE-3, una aspiradora vieja dormida bajo el archivero. Si le hablas, te acompaña, empuja el lápiz que sirve de puente y pisa la ratonera por ti. Si le quitas la batería, ganas pulsos más largos y sigues sin compañía.</li>
+      <li><strong>Usos nuevos del pulso:</strong> una ratonera armada se dispara con la vibración del pulso, sin arriesgar el cuerpo.</li>
+      <li><strong>Acto IV, el laboratorio:</strong> módulo de memoria con minimapa, cámara térmica para cruzar la cámara fría, soldador, el reloj gigante que se monta con el imán, VIGÍA y su patrulla, la grabadora de Inés y los restos de U-4.</li>
+      <li><strong>Acto V, el núcleo:</strong> la puerta exterior está bloqueada desde adentro de la Matriz. Pistones y brazos móviles, la compuerta que abren tus aliados o el túnel vigilado si no tienes, y la conversación con la Matriz en tres preguntas.</li>
+      <li><strong>La puerta exterior:</strong> del lado del núcleo. Abrir, no abrir, o abrir y dejar que un aliado cruce primero. Abrir lleva a una cinemática según tus ejes; no abrir lleva a La puerta cerrada.</li>
+      <li><strong>Finales:</strong> ocho cinemáticas animadas (una secreta) de unos 20 segundos, con subtítulos y música propia. U-6, BARRE-3 y VIGÍA aparecen en ellas si los ayudaste, y si ordenaste la grabadora, la tarjeta final recuerda cómo te llamó Inés. Una galería guarda los finales descubiertos, y "Repetir la sala", "las tripas", "el laboratorio" o "el núcleo" permiten probar otras decisiones sin rehacer lo anterior.</li>
+    </ul>
+    <p><strong>En celular:</strong> el prototipo se juega también en pantallas táctiles. El juego ocupa toda la pantalla; a la izquierda hay una cruceta que se desliza entre izquierda y derecha sin levantar el pulgar, a la derecha SALTO, PULSO y USAR, y arriba memoria, cámara térmica, lente y pausa. Se puede mantener la dirección mientras se salta. Funciona en horizontal y en vertical (en vertical los controles van debajo del juego), vibra al recoger piezas, al morir y al infectarse, y pide pantalla completa al despertar cuando el navegador lo permite.</p>
+    <p><strong>Qué observar en una prueba con jugadores:</strong> cuánto tardan en usar el pulso sin pista, si vuelven a la cuna a leer el primer registro después de tener el puerto, si notan que la memoria se reescribió y cuántos vuelven a la silla después de conseguir el imán, si descubren solos que el pulso dispara la ratonera, y cuántos repiten la sala para ver otro final.</p>
+    <p><a class="btn" href="./" target="_blank" rel="noopener">Jugar el prototipo</a></p>
+  </div>
+</section>
+
+<section id="produccion">
+  <div class="rail">14<small>Producción</small></div>
+  <div class="body">
+    <h2>Alcance realista</h2>
+    <p>"Mundo abierto" es lo que más proyectos independientes mata por alcance. Por eso la propuesta es semiabierta por capas: cada zona es libre por dentro y está acotada por fuera. Recomiendo <strong>Godot 4</strong>: es gratuito, tiene buen soporte de shaders para los filtros de percepción y su escena por nodos encaja con el cuerpo modular de U-7. Unity es la alternativa si ya lo dominas.</p>
+    <div class="roadmap">
+      <div><b>Fase 1 · Prototipo 3D de la zona 0</b><span>6 a 8 semanas</span><p>Portar lo que valida este prototipo: controlador de U-7, los tres filtros de percepción y el pulso. Sin arte final.</p></div>
+      <div><b>Fase 2 · Rebanada vertical</b><span>3 meses</span><p>Zona 0 con arte final y zona 1 jugable. Sistema de ranuras, ocho módulos y los dos primeros ejes ocultos. Es lo que se muestra a publishers o en una demo de Steam Next Fest.</p></div>
+      <div><b>Fase 3 · Producción</b><span>12 a 18 meses</span><p>Zonas 2 a 4, todos los módulos, voces de las máquinas, música por capas y los siete finales.</p></div>
+      <div><b>Fase 4 · Pulido y lanzamiento</b><span>3 meses</span><p>Pruebas con jugadores sobre la legibilidad de las etapas ciegas, accesibilidad (modo de alto contraste para la vibración, subtítulos para todo el audio diegético) y rendimiento.</p></div>
+    </div>
+    <h3>Riesgos</h3>
+    <ul class="clean">
+      <li><strong>La etapa ciega aburre.</strong> Mitigación: que dure menos de 3 minutos y que el pulso sea satisfactorio por sí mismo (sonido, ritmo, revelación).</li>
+      <li><strong>Siete finales multiplican el trabajo.</strong> Mitigación: cada exterior es una escena corta y diorámica, no una zona jugable. Comparten estructura y cambian el set.</li>
+      <li><strong>Ejes ocultos que se sienten arbitrarios.</strong> Mitigación: la Matriz comenta tus decisiones en su pantalla durante el juego, y los compañeros que ayudaste aparecen en la cinemática final.</li>
+      <li><strong>Plataformas 3D a escala pequeña.</strong> Mitigación: sombra proyectada bajo U-7, cámara que se aleja en los saltos y asistencia de borde.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="preguntas">
+  <div class="rail">15<small>Preguntas abiertas</small></div>
+  <div class="body">
+    <h2>Lo que falta decidir</h2>
+    <ul class="clean">
+      <li>¿U-6 te acompaña después de repararlo, como un aliado con habilidades propias, o se queda en la mesa como punto de guardado?</li>
+      <li>¿Se puede quitar un módulo núcleo después de usarlo? Permitirlo hace las builds más radicales, pero complica el diseño de niveles.</li>
+      <li>¿El jugador debe saber que hay varios finales antes de la primera partida? Recomiendo que no: la tarjeta del final lo revela.</li>
+      <li>¿2D en pixel art como el prototipo, o 3D? El 2D reduce el alcance a la mitad, pero pierde la escala tipo Toy Story 2 que inspiró la idea.</li>
+    </ul>
+  </div>
+</section>
+
+<footer><span>Chispa · documento de diseño v1.4</span><span>Prototipo: cinco actos, ocho finales</span></footer>
+</div></div>
+
+<script>
+(() => {
+  const TAU = Math.PI * 2;
+  const phos = hex => { const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+    let l = (0.3 * r + 0.59 * g + 0.11 * b) / 255; l = Math.min(1, Math.round(Math.pow(l, 0.8) * 6) / 6);
+    return `rgb(${8 + 160 * l | 0},${14 + 214 * l | 0},${11 + 182 * l | 0})`; };
+  function scene(x, mono) {
+    const C = h => mono ? phos(h) : h;
+    const R = (a, b, w, h, c) => { x.fillStyle = C(c); x.fillRect(a, b, w, h); };
+    R(0, 0, 160, 90, '#192024'); R(0, 18, 160, 3, '#283136');
+    R(20, 30, 40, 26, '#3b3328'); R(28, 34, 2, 16, '#8a929a'); R(38, 34, 3, 14, '#b24a32'); R(48, 34, 10, 4, '#c79a3a');
+    R(96, 8, 44, 30, '#b9c0b8'); for (let i = 0; i < 4; i++) R(102 + i * 4, 14, 1, 9, '#34507e'); R(124, 12, 1, 9, '#b2552a');
+    R(0, 62, 160, 28, '#22282c'); R(0, 62, 160, 1, '#76818a');
+    R(104, 46, 28, 16, '#3a4248'); R(108, 49, 20, 9, '#0c1612'); R(110, 51, 10, 1, '#4fcf8e'); R(110, 54, 14, 1, '#4fcf8e');
+    R(134, 50, 6, 12, '#7a2e2a'); R(140, 54, 6, 8, '#2f4f6b');
+    R(70, 56, 10, 5, '#8f989e'); R(70, 56, 10, 1, '#c3cbd0'); R(70, 61, 10, 2, '#2f353a'); R(77, 57, 2, 2, mono ? '#e8f4f8' : '#7fd3ff'); R(74, 58, 2, 2, '#ffb347');
+    R(73, 53, 1, 3, '#3b4247'); R(73, 52, 1, 1, '#e07a45');
+    x.fillStyle = C('#ff5a3c'); x.beginPath(); x.arc(14, 12, 2, 0, TAU); x.fill();
+  }
+  document.querySelectorAll('#strip canvas').forEach(cv => {
+    const x = cv.getContext('2d'); x.imageSmoothingEnabled = false;
+    const m = +cv.dataset.mode;
+    if (m === 0) {
+      x.fillStyle = '#000'; x.fillRect(0, 0, 160, 90);
+      x.save(); x.beginPath(); x.arc(75, 59, 46, 0, TAU); x.arc(75, 59, 34, 0, TAU, true); x.clip('evenodd');
+      x.fillStyle = '#c6e6ff'; x.fillRect(0, 62, 160, 1); x.fillRect(104, 46, 28, 1); x.fillRect(104, 46, 1, 16); x.fillRect(131, 46, 1, 16); x.fillRect(134, 50, 6, 1); x.fillRect(140, 54, 6, 1); x.fillRect(20, 30, 40, 1); x.fillRect(59, 30, 1, 26);
+      x.restore();
+      x.globalAlpha = 0.25; x.strokeStyle = '#c6e6ff'; x.beginPath(); x.arc(75, 59, 46, 0, TAU); x.stroke(); x.globalAlpha = 1;
+      const g = x.createRadialGradient(75, 59, 0, 75, 59, 6); g.addColorStop(0, 'rgba(255,170,80,.7)'); g.addColorStop(1, 'rgba(255,170,80,0)'); x.fillStyle = g; x.fillRect(65, 49, 20, 20);
+      x.fillStyle = '#ffd08a'; x.fillRect(74, 58, 2, 2);
+      x.fillStyle = '#ffb347'; x.fillRect(118, 52, 1, 5); x.fillRect(116, 54, 5, 1);
+    } else if (m === 1) {
+      const c = document.createElement('canvas'); c.width = 80; c.height = 45;
+      const t = document.createElement('canvas'); t.width = 160; t.height = 90; const tx = t.getContext('2d'); scene(tx, true);
+      const cc = c.getContext('2d'); cc.imageSmoothingEnabled = false; cc.drawImage(t, 0, 0, 80, 45);
+      x.drawImage(c, 0, 0, 160, 90);
+      const g = x.createRadialGradient(75, 59, 20, 75, 59, 90); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.95)'); x.fillStyle = g; x.fillRect(0, 0, 160, 90);
+      x.fillStyle = 'rgba(0,0,0,.2)'; for (let y = 0; y < 90; y += 2) x.fillRect(0, y, 160, 1);
+    } else {
+      scene(x, false);
+      const g = x.createRadialGradient(75, 59, 40, 75, 59, 120); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.6)'); x.fillStyle = g; x.fillRect(0, 0, 160, 90);
+      if (m === 3) {
+        x.strokeStyle = '#ffb347'; x.lineWidth = 1;
+        const box = (a, b, w, h) => x.strokeRect(a + 0.5, b + 0.5, w, h);
+        box(102, 44, 31, 19); box(9, 7, 10, 10); box(18, 28, 43, 29);
+        x.fillStyle = '#ffb347'; x.font = '6px monospace';
+        x.fillText('TERMINAL · ENLACE', 98, 41); x.fillText('MATRIZ', 21, 12); x.fillText('HERRAMIENTAS', 18, 25);
+        x.setLineDash([2, 2]); x.beginPath(); x.moveTo(80, 58); x.lineTo(104, 54); x.stroke(); x.setLineDash([]);
+      }
+    }
+  });
+})();
+</script>
+
+</body></html>
