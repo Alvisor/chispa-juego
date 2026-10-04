@@ -296,16 +296,18 @@ function buildTripas() {
   air(55, 6, 2, 6);                           // shaft top, into the server room
   air(56, 6, 64, 26);                         // C: server room
   air(100, 1, 4, 5); air(104, 1, 40, 4);      // the high duct ORÁCULO points to (dead end)
-  air(120, 26, 80, 6);                        // D: cable corridor
-  air(200, 18, 14, 14);                       // E: relay room
-  air(214, 0, 8, 32);                         // exit shaft back to the room
+  air(120, 26, 120, 6);                       // D: cable corridor (long, the rat chase lives here)
+  air(240, 18, 14, 14);                       // E: relay room
+  air(254, 0, 8, 32);                         // exit shaft back to the room
   rect(62, 24, 4, 8, T.RACK); rect(70, 19, 4, 13, T.RACK); rect(78, 14, 4, 18, T.RACK);
   rect(88, 18, 8, 14, T.RACK);                // ORÁCULO
   rect(100, 8, 2, 24, T.RACK);
-  [134, 148, 166, 182].forEach(x => rect(x, 26, 1, 6, T.LIVE));
-  [140, 156, 172, 188].forEach(x => rect(x, 32, 3, 18, T.AIR));
-  rect(152, 31, 1, 1, T.DUCT); rect(178, 30, 2, 2, T.DUCT);
-  rect(196, 26, 1, 6, T.SHUTTER);
+  [134, 148, 166, 182, 198, 214].forEach(x => rect(x, 26, 1, 6, T.LIVE));
+  [140, 156, 172, 188, 204, 232].forEach(x => rect(x, 32, 3, 18, T.AIR));
+  rect(152, 31, 1, 1, T.DUCT); rect(178, 30, 2, 2, T.DUCT); rect(210, 30, 2, 2, T.DUCT);
+  rect(220, 30, 9, 2, T.DUCT);                // a raised stretch near the end
+  rect(226, 26, 1, 4, T.LIVE);
+  rect(236, 26, 1, 6, T.SHUTTER);
 }
 function buildLab() {
   map.fill(T.AIR);
@@ -466,7 +468,7 @@ const PLACED_LOGS = ['L1', 'L3', 'L4', 'L6'];
 const ZONES = {
   mesa: { W: 180, H: 40, build: buildMesa, items: ITEMS, logs: PLACED_LOGS, spawn: { x: 40, y: 248 } },
   sala: { W: 250, H: 60, build: buildSala, items: ITEMS_SALA, logs: ['L7', 'L8', 'L9', 'L10'], spawn: { x: 91, y: 424 } },
-  tripas: { W: 230, H: 50, build: buildTripas, items: ITEMS_TRIPAS, logs: ['L11', 'L12', 'L13'], spawn: { x: 16, y: 344 } },
+  tripas: { W: 270, H: 50, build: buildTripas, items: ITEMS_TRIPAS, logs: ['L11', 'L12', 'L13'], spawn: { x: 16, y: 344 } },
   lab: { W: 260, H: 60, build: buildLab, items: ITEMS_LAB, logs: ['L15', 'L20', 'L19', 'L16', 'L23'], spawn: { x: 24, y: 424 } },
   nucleo: { W: 220, H: 60, build: buildNucleo, items: [], logs: ['L21', 'L22', 'L24'], spawn: { x: 40, y: 184 } },
 };
@@ -498,7 +500,7 @@ function newGame() {
         barre: null, bx: 864, pencil: false, pencilT: 0, trap: false, trapSnap: 0, slide: 0, trans: 0, doorT: 0, opened: null, unlocked: false,
         cine: null, hold: null,
         grate: false, powered: false, blackout: false, b1: false, b2: false, shut: false, shutT: 0, orTalk: 0, oraculo: null,
-        rat: { x: 968, on: false, wait: 0, step: 0 }, transFn: null,
+        rat: { x: 968, y: 256, on: false, wait: 0, step: 0 }, transFn: null,
         thermal: false, cold: 0, hatch: false, clock: false, clockA: 1.75, thinCut: false, rec: null, vigia: null, alarms: 0, alarmT: 0,
         vg: { x: 1560, dir: -1, state: 'patrol', t: 0 }, doorAt: { x: 1752, y: 432 },
         gate: false, talked: false, convinced: false, voz: 0, first: null, alarmTo: null, uv: [], uvOn: false, sealCut: false,
@@ -673,7 +675,7 @@ function previewLayer(id) {
 function ambTick() {
   const on = S.started && !S.cine && !S.hold && !S.ended, z = zone, g = (key, v) => ramp(AMB[key].gain, on ? v : 0, 0.5);
   g('room', z === 'mesa' || z === 'sala' || z === 'lab' ? 0.05 : 0);
-  let fan = 0; if (z === 'tripas' && !S.blackout) fan = Math.max(0, 1 - Math.abs(P.x - 384) / 300) * 0.25 + (S.powered ? Math.max(0, 1 - Math.abs(P.x - 1744) / 260) * 0.25 : 0);
+  let fan = 0; if (z === 'tripas' && !S.blackout) fan = Math.max(0, 1 - Math.abs(P.x - 384) / 300) * 0.25 + (S.powered ? Math.max(0, 1 - Math.abs(P.x - 2064) / 260) * 0.25 : 0);
   g('fan', fan);
   let buzz = 0; if (z === 'tripas' && !S.blackout) for (const x of [1072, 1184, 1328, 1456]) buzz = Math.max(buzz, Math.max(0, 1 - Math.abs(P.x + 5 - x) / 90) * 0.08);
   g('buzz', buzz);
@@ -931,14 +933,21 @@ function openDoor(open) {
   if (open) { sfx.bridge(); tone(110, 220, 2.4, 'sine', 0.12); } else tone(110, 55, 1.6, 'sine', 0.2);
 }
 const NULO_ZONES = ['mesa', 'sala', 'tripas', 'lab'];
+// eco: the pulse scatters it; enjambre: the pulse splits it into fragments; voraz: in its hungry phase it eats your pulse
+const nuloKind = () => zone === 'tripas' ? 'enjambre' : zone === 'lab' ? 'voraz' : 'eco';
+const NULO_INTRO = {
+  eco: null,
+  enjambre: 'Este NULO es un enjambre: si lo golpeas con el pulso se parte en tres y cada pedazo te persigue.',
+  voraz: 'Este NULO tiene hambre por fases. Cuando se pone rojo y gruñe, no le dispares: se come tu pulso y viene por ti.',
+};
 function spawnNulo(delay = 300) {
   if (!S.nuloOn || S.nuloDone || !NULO_ZONES.includes(zone)) { S.nl = null; return; }
   const side = Math.random() < 0.5 ? -1 : 1;
-  S.nl = { x: P.x + side * 230, y: P.y - 30, mode: 'away', t: delay };
+  S.nl = { x: P.x + side * 230, y: P.y - 30, mode: 'away', t: delay, kind: nuloKind(), phase: 'calm', pt: 240, size: 0, dash: 0, frags: null };
 }
 function scatterNulo(t) {
   const n = S.nl; if (!n) return;
-  n.mode = 'away'; n.t = t; const side = n.x < P.x ? -1 : 1; n.x = P.x + side * 260; n.y = P.y - 40;
+  n.mode = 'away'; n.t = t; n.frags = null; n.dash = 0; n.phase = 'calm'; n.pt = 240; const side = n.x < P.x ? -1 : 1; n.x = P.x + side * 260; n.y = P.y - 40;
 }
 function infect() {
   S.infected = 540; S.infections = (S.infections || 0) + 1; sfx.die(); buzz([40, 30, 40]); tone(1800, 60, 0.6, 'sawtooth', 0.08); burst(P.x + 5, P.y + 4, 26, '#ff3aa0', 2);
@@ -948,11 +957,64 @@ function infect() {
 function nuloTick() {
   if (S.infected > 0 && --S.infected === 0) { updateHUD(); tone(400, 900, 0.4, 'sine', 0.06); }
   const n = S.nl; if (!n || UI.dlg) return;
-  if (n.mode === 'away') { if (--n.t <= 0) { n.mode = 'hunt'; tone(90, 50, 0.5, 'sawtooth', 0.07); } return; }
-  const dx = P.x + 5 - n.x, dy = P.y + 4 - n.y, d = Math.hypot(dx, dy) || 1, sp = 0.55;
+  if (n.mode === 'away') {
+    if (--n.t <= 0) {
+      n.mode = 'hunt'; tone(90, 50, 0.5, 'sawtooth', 0.07);
+      S.nuloSeen = S.nuloSeen || {};
+      if (NULO_INTRO[n.kind] && !S.nuloSeen[n.kind]) { S.nuloSeen[n.kind] = true; temp(NULO_INTRO[n.kind], 540); }
+    }
+    return;
+  }
+  const px = P.x + 5, py = P.y + 4;
+  if (n.frags) {
+    for (const f of n.frags) {
+      const dx = px - f.x, dy = py - f.y, d = Math.hypot(dx, dy) || 1;
+      f.x += dx / d * 0.85 + Math.sin(S.t * 0.2 + f.x) * 0.5; f.y += dy / d * 0.85 + Math.cos(S.t * 0.17 + f.y) * 0.5;
+      if (d < 6 && !S.infected && !P.dead) { f.dead = true; infect(); }
+    }
+    n.frags = n.frags && n.frags.filter(f => !f.dead);
+    if (n.frags && !n.frags.length) { n.frags = null; scatterNulo(600); }
+    return;
+  }
+  if (n.kind === 'voraz') {
+    if (--n.pt <= 0) {
+      n.phase = n.phase === 'calm' ? 'hungry' : 'calm'; n.pt = n.phase === 'calm' ? 240 : 180;
+      if (n.phase === 'hungry') tone(55, 38, 0.7, 'sawtooth', 0.12);
+    }
+    if (n.phase === 'calm' && n.pt === 45) tone(70, 50, 0.5, 'sawtooth', 0.08);
+  }
+  const dx = px - n.x, dy = py - n.y, d = Math.hypot(dx, dy) || 1;
+  let sp = n.kind === 'voraz' ? (n.phase === 'hungry' ? 0.78 : 0.42) : n.kind === 'enjambre' ? 0.6 : 0.55;
+  if (n.dash > 0) { n.dash--; sp = 2.1; }
   n.x += dx / d * sp + Math.sin(S.t * 0.13) * 0.45; n.y += dy / d * sp + Math.cos(S.t * 0.11) * 0.45;
   if (d < 120 && S.t % 26 === 0) tone(50 + Math.random() * 60, 0, 0.07, 'sawtooth', 0.05 * (1 - d / 120), 0, S.parts.micro ? Math.max(-1, Math.min(1, -dx / 120)) : 0);
-  if (d < 8 && !S.infected && !P.dead) infect();
+  if (d < 8 + n.size && !S.infected && !P.dead) infect();
+}
+function pulseNulo(p, r) {
+  const n = S.nl; if (!n || n.mode !== 'hunt' || p.hitN) return;
+  if (n.frags) {
+    const before = n.frags.length;
+    n.frags = n.frags.filter(f => { if (Math.abs(Math.hypot(f.x - p.x, f.y - p.y) - r) < 5) { burst(f.x, f.y, 12, '#3affd8', 1.4); return false; } return true; });
+    if (n.frags.length < before) { tone(900, 1500, 0.15, 'square', 0.06); if (!n.frags.length) { p.hitN = true; scatterNulo(600); toast('Enjambre disperso', 'Tardará más en volver.'); } }
+    return;
+  }
+  if (Math.abs(Math.hypot(n.x - p.x, n.y - p.y) - r) >= 5 + n.size) return;
+  p.hitN = true;
+  if (n.kind === 'enjambre') {
+    n.frags = [0, 1, 2].map(i => ({ x: n.x + Math.cos(i * 2.1) * 12, y: n.y + Math.sin(i * 2.1) * 12 }));
+    tone(300, 1500, 0.3, 'square', 0.07); burst(n.x, n.y, 20, '#3affd8', 1.8);
+    toast('NULO se parte', 'Cada pedazo te persigue. Golpéalos uno por uno.');
+    return;
+  }
+  if (n.kind === 'voraz' && n.phase === 'hungry') {
+    n.size = Math.min(9, n.size + 3); n.dash = 70; P.pcd = 240;
+    tone(120, 40, 0.8, 'sawtooth', 0.14); tone(60, 30, 0.9, 'square', 0.08, 0.1); burst(n.x, n.y, 30, '#ff2a2a', 2.2); buzz([60, 40, 60]);
+    toast('NULO se comió tu pulso', 'Creció y viene por ti. Tu pulso queda bloqueado unos segundos.');
+    return;
+  }
+  n.size = Math.max(0, n.size - 3);
+  scatterNulo(n.kind === 'voraz' ? 600 : 480); tone(300, 1200, 0.3, 'square', 0.07); burst(p.x, p.y, 1, '#ff3aa0');
+  toast('NULO se dispersa', 'Volverá. Siempre vuelve.');
 }
 function startBoss() {
   S.boss = { nodes: [0, 1, 2].map(i => ({ a: i * TAU / 3, hp: 3, inv: 0 })), bits: [], t: 0, done: false };
@@ -986,7 +1048,7 @@ function snapshot() {
 function enterTripas() {
   loadZone('tripas'); S.visited.tripas = true;
   Object.assign(S, { blackout: false, b1: false, b2: false, shut: false, shutT: 0, powered: false, orTalk: 0, oraculo: null });
-  S.rat = { x: 968, on: false, wait: 0, step: 0 };
+  S.rat = { x: 968, y: 256, on: false, wait: 0, step: 0 };
   buildOutline();
   store.set(SAVE3_KEY, snapshot());
   zoneCard('ZONA 2', 'LAS TRIPAS');
@@ -1008,7 +1070,7 @@ const ZONE_NAMES = { mesa: 'LA MESA', sala: 'LA SALA', tripas: 'LAS TRIPAS', lab
 const ENTRANCES = {
   mesa: { edge: [1300, 232, -1] },
   sala: { grate: [1566, 424, -1], vent: [1655, 280, -1], door: [1716, 424, -1] },
-  tripas: { grate: [16, 344, 1], exit: [1740, 16, -1] },
+  tripas: { grate: [16, 344, 1], exit: [2060, 16, -1] },
   lab: { start: [24, 424, 1], catwalk: [1928, 176, -1] },
   nucleo: { start: [40, 184, 1] },
 };
@@ -1066,7 +1128,7 @@ function meetOraculo() {
 }
 function pullB1() {
   S.b1 = true; S.blackout = true; S.cp = { x: P.x, y: P.y };
-  S.rat = { x: 968, on: true, wait: 110, step: 0 };
+  S.rat = { x: 968, y: 256, on: true, wait: 110, step: 0 };
   sfx.powerDown(); pings = []; buildOutline();
   temp('Apagón. Los cables ya no matan. Algo despertó detrás de ti.', 420);
 }
@@ -1077,7 +1139,7 @@ function pullB2() {
 }
 function fixRelay() {
   S.powered = true; S.cp = { x: P.x, y: P.y }; sfx.bridge();
-  burst(1668, 236, 22, '#4fe08a', 1.4);
+  burst(1988, 236, 22, '#4fe08a', 1.4);
   openDialog({ title: 'Relé · ala B', body: 'Enlace aceptado.\nCircuito de la puerta de la sala: RECONECTADO.\nVentilador de salida: ENCENDIDO.', onClose: () => temp(`Sube por el ducto: mantén ${K('salto', 'SALTO')} sobre el ventilador.`, 420) });
 }
 function enterLab() {
@@ -1254,7 +1316,7 @@ function die() {
 }
 function respawn() {
   P.x = S.cp.x; P.y = S.cp.y; P.vx = P.vy = 0; P.dead = 0; P.hand = null; P.on = null; S.cold = 0;
-  if (zone === 'tripas' && S.blackout) S.rat = { x: 968, on: true, wait: 110, step: 0 };
+  if (zone === 'tripas' && S.blackout) S.rat = { x: 968, y: 256, on: true, wait: 110, step: 0 };
 }
 
 // ---------- Physics ----------
@@ -1344,8 +1406,8 @@ function nearestAction() {
   if (zone === 'tripas') {
     if (near({ x: 700, y: 248 }, 22, 16)) return { kind: 'oraculo' };
     if (!S.b1 && near({ x: 997, y: 244 }, 20, 18)) return { kind: 'b1' };
-    if (S.blackout && near({ x: 1612, y: 244 }, 20, 18)) return { kind: 'b2' };
-    if (S.b2 && !S.powered && near({ x: 1668, y: 244 }, 22, 18)) return { kind: 'relay' };
+    if (S.blackout && near({ x: 1932, y: 244 }, 20, 18)) return { kind: 'b2' };
+    if (S.b2 && !S.powered && near({ x: 1988, y: 244 }, 22, 18)) return { kind: 'relay' };
   }
   return null;
 }
@@ -1354,13 +1416,13 @@ function targets() {
     .concat(placed().filter(id => !S.logs.includes(id)).map(id => [id, LOGS[id].x, LOGS[id].y]));
   if (zone === 'mesa') t.push(['term', TERMINAL.x, TERMINAL.y], ['u6', U6.x, U6.y]);
   else if (zone === 'sala') t.push(['panel', 1740, 268], ['grate', 1576, 420]);
-  else if (zone === 'tripas') t.push(['b2', 1612, 240], ['relay', 1668, 240], ['oraculo', 730, 170]);
+  else if (zone === 'tripas') t.push(['b2', 1932, 240], ['relay', 1988, 240], ['oraculo', 730, 170]);
   else if (zone === 'lab') t.push(['clock', 858, 416], ['labdoor', 1944, 168]);
   else t.push(['talk', 1460, 100], ['final', 1628, 160]);
   return t;
 }
 const pingLife = () => S.parts.celda ? 110 : 70;
-const UPDRAFTS = { tripas: [[328, 40, 440, 352, () => !S.blackout], [1712, -40, 1776, 256, () => S.powered]], };
+const UPDRAFTS = { tripas: [[328, 40, 440, 352, () => !S.blackout], [2032, -40, 2096, 256, () => S.powered]], };
 const updraftAt = (x, y) => (UPDRAFTS[zone] || []).some(([x0, y0, x1, y1, on]) => x >= x0 && x <= x1 && y >= y0 && y <= y1 && on());
 function onIce() { const b = Math.floor((P.y + P.h + 1) / TS); return P.ground && (tile(Math.floor((P.x + 1) / TS), b) === T.ICE || tile(Math.floor((P.x + P.w - 1) / TS), b) === T.ICE); }
 function vigiaSees() {
@@ -1404,23 +1466,30 @@ function handTick() {
   P.x = CLOCK.x + Math.cos(a) * P.hand.s - 5; P.y = CLOCK.y + Math.sin(a) * P.hand.s - 8; P.ground = false;
   if (pressed.has('jump')) { P.hand = null; P.vy = -3.9; P.vx = (P.dir || 1) * 1.35; sfx.jump(); }
 }
+function ratFloor(x) {
+  const tx = Math.floor((x + 7) / TS);
+  for (let ty = 26; ty < 34; ty++) if (solid(tile(tx, ty))) return ty * TS;
+  return null;
+}
 function tripasTick() {
   if (!S.blackout && !P.dead && touches(T.LIVE)) { sfx.zap(); burst(P.x + 5, P.y + 4, 18, '#bfe6ff', 2); die(); }
-  if (!S.shut && P.x > 1584) { S.shut = true; S.shutT = 1; sfx.shutter(); buildOutline(); temp('Una compuerta se cierra detrás de ti.', 300); }
+  if (!S.shut && P.x > 1904) { S.shut = true; S.shutT = 1; sfx.shutter(); buildOutline(); temp('Una compuerta se cierra detrás de ti.', 300); }
   if (S.shutT > 0 && S.shutT < 30) S.shutT++;
   const r = S.rat;
   if (r.on && S.blackout) {
     if (r.wait > 0) { r.wait--; if (r.wait === 60) tone(70, 50, 0.6, 'sawtooth', 0.08); }
     else {
       const gap = (P.x + 5) - (r.x + 7), sp = gap > 150 ? 1.5 : gap > 70 ? 1.22 : 1.1;
-      r.x = Math.min(S.shut ? 1548 : 9999, r.x + sp); r.step++;
+      r.x = Math.min(S.shut ? 1868 : 9999, r.x + sp); r.step++;
+      const fy = ratFloor(r.x); if (fy !== null) r.y += (fy - r.y) * 0.35;
       const d = r.x + 7 - (P.x + 5), pan = Math.max(-1, Math.min(1, d / 160));
       if (r.step % 12 === 0 && Math.abs(d) < 260) tone(140 + Math.max(0, 200 - Math.abs(d)), 0, 0.04, 'square', 0.03 + 0.07 * Math.max(0, 1 - Math.abs(d) / 260), 0, S.parts.micro ? pan : 0);
-      if (S.shut && r.x >= 1548 && r.step % 40 === 0) tone(90, 60, 0.15, 'square', 0.1);
-      if (!P.dead && Math.abs(d) < 9 && P.y + P.h > 240) { sfx.die(); die(); }
+      if (S.shut && r.x >= 1868 && r.step % 40 === 0) tone(90, 60, 0.15, 'square', 0.1);
+      if (!P.dead && Math.abs(d) < 9 && Math.abs(P.y + P.h - r.y) < 7) { sfx.die(); die(); }
+      if (r.step % 240 === 120 && Math.abs(d) < 200) tone(1800, 900, 0.25, 'sawtooth', 0.05, 0, S.parts.micro ? Math.max(-1, Math.min(1, d / 160)) : 0);
     }
   }
-  if (S.powered && P.x > 1712 && P.y < 10) goTo(returnSala);
+  if (S.powered && P.x > 2032 && P.y < 10) goTo(returnSala);
 }
 function camFollow() {
   const tx = P.x + 5 - VW / 2 + P.dir * 24, ty = P.y + 4 - 116;
@@ -1536,8 +1605,8 @@ function update() {
     const r = p.age * 2.4;
     for (const [k, x, y] of tg) if (Math.abs(Math.hypot(x - p.x, y - p.y) - r) < 3) S.blips[k] = 1;
     if (zone === 'sala' && !S.trap && Math.abs(Math.hypot(1300 - p.x, 420 - p.y) - r) < 3) springTrap(true);
-    if (zone === 'tripas' && S.rat.on && Math.abs(Math.hypot(S.rat.x + 7 - p.x, 252 - p.y) - r) < 3) S.blips.rat = 1;
-    if (S.nl && S.nl.mode === 'hunt' && Math.abs(Math.hypot(S.nl.x - p.x, S.nl.y - p.y) - r) < 5) { scatterNulo(480); tone(300, 1200, 0.3, 'square', 0.07); burst(p.x, p.y, 1, '#ff3aa0'); toast('NULO se dispersa', 'Volverá. Siempre vuelve.'); }
+    if (zone === 'tripas' && S.rat.on && Math.abs(Math.hypot(S.rat.x + 7 - p.x, S.rat.y - 4 - p.y) - r) < 3) S.blips.rat = 1;
+    pulseNulo(p, r);
     if (S.boss && !S.boss.done) for (const n of S.boss.nodes) if (n.hp > 0 && !n.inv) { const [nx, ny] = nodePos(n); if (Math.abs(Math.hypot(nx - p.x, ny - p.y) - r) < 6) { n.hp--; n.inv = 40; tone(600 - n.hp * 100, 120, 0.3, 'square', 0.09); burst(nx, ny, n.hp ? 10 : 30, '#ff3aa0', n.hp ? 1.2 : 2.4); } }
   }
 
@@ -2280,12 +2349,12 @@ function tripasBackdrop() {
   for (let i = 0; i < 9; i++) { g.strokeStyle = C(['#2b3a52', '#3a2b2b', '#2b3a2e'][i % 3]); g.lineWidth = 2; g.beginPath(); g.moveTo(460 + i * 56, 68); g.quadraticCurveTo(488 + i * 56, 110 + (i % 3) * 14, 516 + i * 56, 68); g.stroke(); }
   for (let x = 470; x < 950; x += 36) { R(x, 120, 24, 136, '#121a1f'); for (let y = 128; y < 250; y += 9) R(x + 3, y, 18, 1, '#18222a'); if (!S.blackout && ((x + (S.t >> 4)) % 5 === 0)) R(x + 4, 140, 1, 1, '#2f8a55'); }
   R(800, 8, 352, 32, '#141c20');
-  R(960, 208, 640, 48, '#11191d'); R(960, 212, 640, 3, '#1c252a');
-  for (let x = 960; x < 1580; x += 12) R(x, 216 + ((x / 12) % 3), 10, 1, '#202a30');
-  for (const lx of [1010, 1170, 1330, 1490]) { R(lx, 210, 10, 5, '#3a3226'); if (!S.blackout) { R(lx + 2, 212, 6, 2, '#ffb347'); if (SIGHT >= 2) { const gr = g.createRadialGradient(lx + 5, 214, 0, lx + 5, 214, 50); gr.addColorStop(0, 'rgba(255,170,80,0.18)'); gr.addColorStop(1, 'rgba(255,170,80,0)'); g.fillStyle = gr; g.fillRect(lx - 45, 214, 100, 44); } } }
-  R(1600, 144, 112, 112, '#131c20'); R(1712, -40, 64, 296, '#131b1f');
-  for (let y = 0; y < 256; y += 24) R(1712, y, 64, 1, '#1b252a');
-  if (S.powered && SIGHT >= 2) { const gr = g.createLinearGradient(0, 0, 0, 120); gr.addColorStop(0, 'rgba(255,214,150,0.22)'); gr.addColorStop(1, 'rgba(255,214,150,0)'); g.fillStyle = gr; g.fillRect(1712, 0, 64, 120); }
+  R(960, 208, 960, 48, '#11191d'); R(960, 212, 960, 3, '#1c252a');
+  for (let x = 960; x < 1900; x += 12) R(x, 216 + ((x / 12) % 3), 10, 1, '#202a30');
+  for (const lx of [1010, 1170, 1330, 1490, 1650, 1810]) { R(lx, 210, 10, 5, '#3a3226'); if (!S.blackout) { R(lx + 2, 212, 6, 2, '#ffb347'); if (SIGHT >= 2) { const gr = g.createRadialGradient(lx + 5, 214, 0, lx + 5, 214, 50); gr.addColorStop(0, 'rgba(255,170,80,0.18)'); gr.addColorStop(1, 'rgba(255,170,80,0)'); g.fillStyle = gr; g.fillRect(lx - 45, 214, 100, 44); } } }
+  R(1920, 144, 112, 112, '#131c20'); R(2032, -40, 64, 296, '#131b1f');
+  for (let y = 0; y < 256; y += 24) R(2032, y, 64, 1, '#1b252a');
+  if (S.powered && SIGHT >= 2) { const gr = g.createLinearGradient(0, 0, 0, 120); gr.addColorStop(0, 'rgba(255,214,150,0.22)'); gr.addColorStop(1, 'rgba(255,214,150,0)'); g.fillStyle = gr; g.fillRect(2032, 0, 64, 120); }
 }
 function drawFan(x0, x1, y, on) {
   R(x0, y - 4, x1 - x0, 6, '#2b3439'); R(x0, y - 4, x1 - x0, 1, '#5c666e');
@@ -2303,7 +2372,7 @@ function drawRat(x, y, awake) {
 }
 function tripasDecor() {
   drawFan(330, 438, 352, !S.blackout);
-  drawFan(1714, 1774, 256, S.powered);
+  drawFan(2034, 2094, 256, S.powered);
   R(282, 330, 26, 22, '#2b3439'); R(284, 332, 22, 18, '#161c1f'); line([[286, 348], [304, 334]], 1, '#3a4247');
   // ORÁCULO's face
   const ox = 712, oy = 152, dark = S.oraculo === 'expose' || S.blackout;
@@ -2318,12 +2387,12 @@ function tripasDecor() {
   R(1104, 33, 20, 7, '#4a3a30'); R(1100, 35, 6, 5, '#3a2e26'); R(1110, 30, 3, 3, '#5a4a3a'); R(1116, 34, 2, 2, '#2a1a12');
   // breakers and relay
   R(988, 222, 18, 30, '#2b3237'); R(988, 222, 18, 1, '#5c666e'); R(995, S.b1 ? 240 : 226, 4, 10, '#c0392b'); R(990, 246, 14, 2, '#c79a3a');
-  R(1604, 222, 18, 30, '#2b3237'); R(1604, 222, 18, 1, '#5c666e'); R(1611, S.b2 ? 226 : 240, 4, 10, '#2f8a55'); R(1606, 246, 14, 2, '#c79a3a');
-  R(1654, 216, 30, 36, '#2b3237'); R(1654, 216, 30, 1, '#5c666e'); R(1660, 222, 18, 10, '#0b1f18');
-  R(1665, 226, 8, 2, S.powered ? '#4fe08a' : ((S.t >> 4) % 2 ? '#ff5a3c' : '#4a1a12'));
-  line([[1684, 236], [1700, 236], [1700, 160], [1712, 160]], 2, '#8a4f2c');
+  R(1924, 222, 18, 30, '#2b3237'); R(1924, 222, 18, 1, '#5c666e'); R(1931, S.b2 ? 226 : 240, 4, 10, '#2f8a55'); R(1926, 246, 14, 2, '#c79a3a');
+  R(1974, 216, 30, 36, '#2b3237'); R(1974, 216, 30, 1, '#5c666e'); R(1980, 222, 18, 10, '#0b1f18');
+  R(1985, 226, 8, 2, S.powered ? '#4fe08a' : ((S.t >> 4) % 2 ? '#ff5a3c' : '#4a1a12'));
+  line([[2004, 236], [2020, 236], [2020, 160], [2032, 160]], 2, '#8a4f2c');
   if (!S.b1) drawRat(966, 256, false);
-  else if (S.rat.on) drawRat(Math.round(S.rat.x), 256, true);
+  else if (S.rat.on) drawRat(Math.round(S.rat.x), Math.round(S.rat.y), true);
   drawNotes();
 }
 function salaBackdrop() {
@@ -2498,14 +2567,19 @@ function drawMotes() {
   }
   g.globalAlpha = 1;
 }
-function glitchBlob(x, y, r, seed) {
-  const cols = ['#ff3aa0', '#3affd8', '#b8ff3a', '#ffffff', '#8a2be2'];
+const NULO_COLS = { eco: ['#ff3aa0', '#3affd8', '#b8ff3a', '#ffffff', '#8a2be2'], enjambre: ['#3affd8', '#b8ff3a', '#ffffff', '#3affd8', '#5fd0ff'], calm: ['#9aa4ab', '#c3cbd0', '#ffffff', '#6a747b', '#c3cbd0'], hungry: ['#ff2a2a', '#ff3aa0', '#ff7a3c', '#ffffff', '#ff2a2a'] };
+function glitchBlob(x, y, r, seed, cols = NULO_COLS.eco) {
   for (let i = 0; i < 16 + r * 1.2; i++) { const a = hsh(seed + i, S.t >> 2) * TAU, d = hsh(i, (S.t >> 1) + seed) * r; R(Math.round(x + Math.cos(a) * d), Math.round(y + Math.sin(a) * d), 1 + (i % 3 === 0 ? 1 : 0), 1, cols[(i + (S.t >> 2)) % cols.length]); }
   R(Math.round(x) - 2, Math.round(y) - 2, 4, 4, '#05030a');
 }
 function drawNulo() {
   const n = S.nl;
-  if (n && n.mode === 'hunt') { glitchBlob(n.x, n.y, 12, 1); glitchBlob(n.x + Math.sin(S.t * 0.3) * 4, n.y + Math.cos(S.t * 0.2) * 4, 6, 7); if ((S.t >> 3) % 6 === 0) { g.fillStyle = C('#ff3aa0'); g.font = '6px monospace'; g.fillText('NUL', n.x - 6, n.y - 9); } }
+  if (n && n.mode === 'hunt' && n.frags) { for (const [i, f] of n.frags.entries()) glitchBlob(f.x, f.y, 6, 11 + i, NULO_COLS.enjambre); }
+  else if (n && n.mode === 'hunt') {
+    const warn = n.kind === 'voraz' && n.phase === 'calm' && n.pt < 45 && (S.t >> 2) % 2;
+    const cols = n.kind === 'voraz' ? NULO_COLS[n.phase === 'hungry' || warn ? 'hungry' : 'calm'] : NULO_COLS[n.kind] || NULO_COLS.eco;
+    glitchBlob(n.x, n.y, 12 + n.size, 1, cols); glitchBlob(n.x + Math.sin(S.t * 0.3) * 4, n.y + Math.cos(S.t * 0.2) * 4, 6 + n.size / 2, 7, cols);
+    if (n.kind === 'voraz' && n.phase === 'hungry') { g.globalAlpha = 0.35 + 0.25 * Math.sin(S.t * 0.4); g.strokeStyle = C('#ff2a2a'); g.lineWidth = 1; g.beginPath(); g.arc(n.x, n.y, 16 + n.size + Math.sin(S.t * 0.3) * 2, 0, TAU); g.stroke(); g.globalAlpha = 1; g.fillStyle = C('#ff2a2a'); g.font = 'bold 8px monospace'; g.fillText('!', n.x - 2, n.y - 18 - n.size); } if ((S.t >> 3) % 6 === 0) { g.fillStyle = C('#ff3aa0'); g.font = '6px monospace'; g.fillText('NUL', n.x - 6, n.y - 9); } }
   else if (n && n.mode === 'away' && n.t < 60 && (S.t >> 1) % 2) glitchBlob(n.x, n.y, 4, 2);
   const B = S.boss;
   if (B && !B.done) {
@@ -2601,19 +2675,19 @@ function drawBlind() {
 function drawDarkExtras() {
   const cx = Math.round(cam.x), cy = Math.round(cam.y);
   if (S.parts.mapa) { ctx.globalAlpha = 0.13; ctx.drawImage(outline, -cx, -cy); ctx.globalAlpha = 1; }
-  if (S.nl && S.nl.mode === 'hunt') for (let i = 0; i < 10; i++) { ctx.fillStyle = ['#ff3aa0', '#3affd8', '#ffffff'][i % 3]; ctx.fillRect(Math.round(S.nl.x - cx + (hsh(i, S.t >> 1) - 0.5) * 14), Math.round(S.nl.y - cy + (hsh(i + 5, S.t >> 1) - 0.5) * 14), 1, 1); }
+  if (S.nl && S.nl.mode === 'hunt') for (const b of (S.nl.frags || [S.nl])) for (let i = 0; i < 10; i++) { ctx.fillStyle = ['#ff3aa0', '#3affd8', '#ffffff'][i % 3]; ctx.fillRect(Math.round(b.x - cx + (hsh(i, S.t >> 1) - 0.5) * 14), Math.round(b.y - cy + (hsh(i + 5, S.t >> 1) - 0.5) * 14), 1, 1); }
   // the emergency LED on the far breaker never goes out
-  const bx = 1613 - cx, by = 238 - cy;
+  const bx = 1933 - cx, by = 238 - cy;
   ctx.fillStyle = (S.t >> 5) % 2 ? '#4fe08a' : '#1f5a35'; ctx.fillRect(bx, by, 2, 2);
   // RATA-9's eye
   const r = S.rat;
   if (r.on) {
-    const ex = Math.round(r.x + 14 - cx), ey = 250 - cy;
+    const ex = Math.round(r.x + 14 - cx), ey = Math.round(r.y - 6 - cy);
     const gr = ctx.createRadialGradient(ex, ey, 0, ex, ey, 7); gr.addColorStop(0, 'rgba(255,60,40,0.6)'); gr.addColorStop(1, 'rgba(255,60,40,0)');
     ctx.fillStyle = gr; ctx.fillRect(ex - 7, ey - 7, 14, 14); ctx.fillStyle = '#ff3a2a'; ctx.fillRect(ex, ey, 2, 1);
   }
   if (S.parts.micro) {
-    const srcs = [[r.on ? r.x + 7 : null, 252, '#ff5a3c'], [1613, 240, '#4fe08a']];
+    const srcs = [[r.on ? r.x + 7 : null, r.y - 4, '#ff5a3c'], [1933, 240, '#4fe08a']];
     for (const [sx, sy, col] of srcs) {
       if (sx === null) continue;
       const dx = sx - cx, dy = sy - cy;
