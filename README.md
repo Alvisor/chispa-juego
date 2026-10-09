@@ -10,4 +10,4 @@ Cinco actos, ocho finales (uno secreto), música que se arma con las piezas que 
 
 Controles de teclado: flechas o A/D para moverse, Q para el pulso, E para usar, W, ↑ o Espacio para saltar, M para la memoria, T para la cámara térmica y L para la lente.
 
-Este repositorio solo contiene la versión publicada del juego (versión 1.2.0).
+Este repositorio solo contiene la versión publicada del juego (versión 1.3.0).

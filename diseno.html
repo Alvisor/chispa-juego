@@ -155,7 +155,7 @@ footer{font-family:var(--f-mono);font-size:12px;color:var(--muted);padding-top:2
 
 <header class="hero">
   <div>
-    <div class="code">Documento de diseño · v1.5 · 4 de octubre de 2026</div>
+    <div class="code">Documento de diseño · v1.6 · 9 de octubre de 2026</div>
     <h1>CHISP<span>A</span></h1>
     <p class="logline">Un mecanismo diminuto despierta a ciegas sobre la mesa de un laboratorio abandonado. Cada pieza que encuentra le da un sentido nuevo, y cada sentido nuevo cambia lo que cree saber del lugar, de quién lo construyó y de lo que hay detrás de la puerta.</p>
   </div>
@@ -176,7 +176,7 @@ footer{font-family:var(--f-mono);font-size:12px;color:var(--muted);padding-top:2
 <nav class="toc" aria-label="Contenido">
   <a href="#concepto">Concepto</a><a href="#referentes">Referentes</a><a href="#bucle">Bucle</a><a href="#percepcion">Percepción</a>
   <a href="#modulos">Módulos</a><a href="#mundo">Mundo</a><a href="#actos">Actos</a><a href="#narrativa">Narrativa</a><a href="#rival">Rival</a><a href="#ejes">Ejes ocultos</a>
-  <a href="#finales">Finales</a><a href="#arte">Arte y audio</a><a href="#prototipo">Prototipo</a><a href="#produccion">Producción</a><a href="#preguntas">Preguntas</a>
+  <a href="#finales">Finales</a><a href="#arte">Arte y audio</a><a href="#prototipo">Prototipo</a><a href="#fases">Siguientes fases</a><a href="#produccion">Producción</a><a href="#preguntas">Preguntas</a>
 </nav>
 
 <section id="concepto">
@@ -608,15 +608,51 @@ flowchart LR
   </div>
 </section>
 
+<section id="fases">
+  <div class="rail">14<small>Siguientes fases</small></div>
+  <div class="body">
+    <h2>Del prototipo a una demo pública</h2>
+    <p>El prototipo ya tiene los cinco actos, los ocho finales, los secretos, los regresos, NULO, la música por capas y el modo celular, y todo pasa por pruebas automáticas. Lo que falta no es contenido nuevo sino <strong>saber cómo se siente en manos de otras personas</strong>. Por eso las siguientes fases empiezan midiendo, siguen con lo que da más rejuego por menos trabajo y terminan en una demo que se pueda mostrar. Son unas 12 semanas a tiempo parcial, y al final hay una decisión: seguir en 2D o pasar a la producción en 3D de la sección siguiente.</p>
+    <div class="roadmap">
+      <div><b>Fase A · Pruebas con jugadores y calibración</b><span>2 semanas</span><p>Entre cinco y ocho personas juegan de principio a fin, la mitad con teclado y la mitad en celular, sin explicación previa. Se agregan eventos anónimos (muertes por zona, minutos por acto, final alcanzado, si usaron la lente) con un contador sin cookies como GoatCounter. Con esos datos se calibra lo que hoy es una estimación: velocidad de RATA-9, ritmo del frío, tiempos de pistones y brazos, las fases de NULO voraz y su castigo, la cadencia de bits del jefe, el volumen de cada capa de música y el tamaño de los botones táctiles. También se prueba la pantalla completa en iPhone, que hoy depende del navegador.</p></div>
+      <div><b>Fase B · Rejugabilidad</b><span>3 semanas</span><p>Lo que ya está diseñado en Actos y no está jugable: <em>Iteración 8</em> (empezar de nuevo como la siguiente unidad, con los fragmentos leídos ya decodificados y la Matriz que te reconoce), el <em>selector de actos</em> para cualquier acto terminado, el <em>mapa de secretos</em> en la memoria (cuántos fragmentos, restos y escrituras faltan por zona, sin decir dónde) y los <em>retos opcionales</em>: sin morir, con el mínimo de módulos y el apagón sin pulso. La galería suma pistas vagas de los finales que faltan.</p></div>
+      <div><b>Fase C · Decisiones con peso</b><span>3 semanas</span><p>Que cada decisión tenga eco más adelante. U-6 reparado te acompaña como aliado con una habilidad propia (resuelve la primera pregunta abierta). BARRE-3 aliado aparece en el apagón y limpia el ducto con polvo que esconde un atajo. Lo que decidiste con ORÁCULO cambia una respuesta de la Matriz en el núcleo, y la Matriz comenta tus decisiones en su pantalla durante el juego, como pide el riesgo de los ejes arbitrarios. VIGÍA aparece en los finales según lo que hiciste con ella.</p></div>
+      <div><b>Fase D · Accesibilidad y pulido</b><span>2 semanas</span><p>Subtítulos para todo el audio diegético (la rata, los ventiladores, la voz de la Matriz), un modo de alto contraste para los contornos del pulso, una opción para reducir parpadeos y el efecto de NULO, teclas reasignables, soporte de mando con la Gamepad API, volumen separado para música, efectos y ambiente, y exportar o importar la partida como texto para cambiar de dispositivo.</p></div>
+      <div><b>Fase E · Inglés y demo pública</b><span>2 semanas</span><p>Todos los textos pasan a una tabla para traducirlos, empezando por el inglés. Se publica una página en itch.io con capturas, un tráiler grabado con el propio juego y un formulario corto de opinión. Con lo que digan los jugadores de las fases A y E se toma la decisión de formato.</p></div>
+    </div>
+    <h3>Pendiente de calibrar</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Qué</th><th>Valor actual</th><th>Señal en la fase A</th></tr></thead>
+      <tbody>
+        <tr><td><b>Persecución de RATA-9</b></td><td>Corredor de 120 casillas, velocidad elástica</td><td>Angustia sin frustración: menos de tres muertes en el apagón por jugador</td></tr>
+        <tr><td><b>NULO voraz</b></td><td>4 s en calma, 3 s con hambre; pulsarlo con hambre lo hace crecer y embestir</td><td>Que el jugador aprenda a esperar la calma sin que nadie se lo diga</td></tr>
+        <tr><td><b>Cámara fría</b></td><td>Ritmo de enfriamiento fijo</td><td>Que la térmica se use para buscar calor, no por pánico</td></tr>
+        <tr><td><b>Pistones y brazos</b></td><td>Ciclos fijos por máquina</td><td>Que el núcleo no se sienta más difícil que el apagón</td></tr>
+        <tr><td><b>Jefe NULO</b></td><td>Tres nodos, bits periódicos</td><td>Una a dos muertes de media, nunca más de cinco</td></tr>
+        <tr><td><b>Mezcla de música</b></td><td>Volúmenes por capa estimados sin escucharlos</td><td>Que ninguna capa tape el pulso ni la rata</td></tr>
+        <tr><td><b>Controles táctiles</b></td><td>Botones de tamaño fijo</td><td>Pocas pulsaciones fallidas en teléfonos pequeños</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Cómo se trabaja cada fase</h3>
+    <ul class="clean">
+      <li><strong>Una rama y un pull request por fase,</strong> con su prueba automática nueva junto a las del bot que ya juega las nueve rutas.</li>
+      <li><strong>Publicar al cerrar cada fase</strong> en la versión pública, para que quien prueba siempre juegue lo último.</li>
+      <li><strong>El documento se actualiza con cada fase:</strong> lo que pasa a jugable deja de ser propuesta y se marca como "ya existe en el prototipo".</li>
+    </ul>
+    <h3>La decisión al final de la fase E</h3>
+    <p>Si los jugadores piden más de lo mismo y el pixel art se sostiene, la ruta corta es <strong>quedarse en 2D</strong>: ampliar cada acto, pulir el arte y lanzar un juego de unas tres horas en itch.io y Steam. Si lo que más engancha es la escala y el cambio de percepción, la ruta es <strong>el 3D en Godot</strong> que describe la sección de Producción, usando el prototipo como especificación jugable. En ambos casos, el prototipo y sus pruebas siguen siendo la referencia de qué debe sentirse igual.</p>
+  </div>
+</section>
+
 <section id="produccion">
-  <div class="rail">14<small>Producción</small></div>
+  <div class="rail">15<small>Producción</small></div>
   <div class="body">
     <h2>Alcance realista</h2>
-    <p>"Mundo abierto" es lo que más proyectos independientes mata por alcance. Por eso la propuesta es semiabierta por capas: cada zona es libre por dentro y está acotada por fuera. Recomiendo <strong>Godot 4</strong>: es gratuito, tiene buen soporte de shaders para los filtros de percepción y su escena por nodos encaja con el cuerpo modular de U-7. Unity es la alternativa si ya lo dominas.</p>
+    <p>Este es el camino si, al cerrar la fase E, se elige el 3D. "Mundo abierto" es lo que más proyectos independientes mata por alcance. Por eso la propuesta es semiabierta por capas: cada zona es libre por dentro y está acotada por fuera. Recomiendo <strong>Godot 4</strong>: es gratuito, tiene buen soporte de shaders para los filtros de percepción y su escena por nodos encaja con el cuerpo modular de U-7. Unity es la alternativa si ya lo dominas.</p>
     <div class="roadmap">
       <div><b>Fase 1 · Prototipo 3D de la zona 0</b><span>6 a 8 semanas</span><p>Portar lo que valida este prototipo: controlador de U-7, los tres filtros de percepción y el pulso. Sin arte final.</p></div>
       <div><b>Fase 2 · Rebanada vertical</b><span>3 meses</span><p>Zona 0 con arte final y zona 1 jugable. Sistema de ranuras, ocho módulos y los dos primeros ejes ocultos. Es lo que se muestra a publishers o en una demo de Steam Next Fest.</p></div>
-      <div><b>Fase 3 · Producción</b><span>12 a 18 meses</span><p>Zonas 2 a 4, todos los módulos, voces de las máquinas, música por capas y los siete finales.</p></div>
+      <div><b>Fase 3 · Producción</b><span>12 a 18 meses</span><p>Zonas 2 a 4, todos los módulos, voces de las máquinas, música por capas y los ocho finales.</p></div>
       <div><b>Fase 4 · Pulido y lanzamiento</b><span>3 meses</span><p>Pruebas con jugadores sobre la legibilidad de las etapas ciegas, accesibilidad (modo de alto contraste para la vibración, subtítulos para todo el audio diegético) y rendimiento.</p></div>
     </div>
     <h3>Riesgos</h3>
@@ -630,19 +666,19 @@ flowchart LR
 </section>
 
 <section id="preguntas">
-  <div class="rail">15<small>Preguntas abiertas</small></div>
+  <div class="rail">16<small>Preguntas abiertas</small></div>
   <div class="body">
     <h2>Lo que falta decidir</h2>
     <ul class="clean">
-      <li>¿U-6 te acompaña después de repararlo, como un aliado con habilidades propias, o se queda en la mesa como punto de guardado?</li>
+      <li>¿U-6 te acompaña después de repararlo, como un aliado con habilidades propias, o se queda en la mesa como punto de guardado? La fase C prueba la primera opción.</li>
       <li>¿Se puede quitar un módulo núcleo después de usarlo? Permitirlo hace las builds más radicales, pero complica el diseño de niveles.</li>
       <li>¿El jugador debe saber que hay varios finales antes de la primera partida? Recomiendo que no: la tarjeta del final lo revela.</li>
-      <li>¿2D en pixel art como el prototipo, o 3D? El 2D reduce el alcance a la mitad, pero pierde la escala tipo Toy Story 2 que inspiró la idea.</li>
+      <li>¿2D en pixel art como el prototipo, o 3D? El 2D reduce el alcance a la mitad, pero pierde la escala tipo Toy Story 2 que inspiró la idea. Se decide al cerrar la fase E.</li>
     </ul>
   </div>
 </section>
 
-<footer><span>Chispa · documento de diseño v1.5</span><span>Prototipo: cinco actos, ocho finales</span></footer>
+<footer><span>Chispa · documento de diseño v1.6</span><span>Prototipo: cinco actos, ocho finales</span></footer>
 </div></div>
 
 <script>
